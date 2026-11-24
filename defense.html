@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | التجنيد - القوات المسلحة</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.mil{color:#eef3ff;background:linear-gradient(135deg,#1a2a1a,#2c3e50);border:2px solid var(--brand);border-radius:16px;padding:28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.mil::after{content:"ARMED FORCES";position:absolute;left:-20px;top:-6px;font-size:4rem;font-weight:800;opacity:.05;transform:rotate(-8deg);pointer-events:none}
+.rank{display:inline-block;background:var(--brand);color:var(--brand-ink);padding:4px 16px;border-radius:6px;font-weight:800;margin-bottom:14px}
+.mil .in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.stamp{border:3px double #e74c3c;color:#e74c3c;border-radius:50%;width:92px;height:92px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:.8rem;line-height:1.25;transform:rotate(-18deg)}
+.mil .qr{background:#fff;padding:5px;margin-top:10px;display:inline-block;line-height:0;border-radius:6px}
+.mil .qr svg{width:78px;height:78px}
+.permit{background:#3ddc9718;border:1px solid var(--ok);color:var(--ok);padding:12px;border-radius:10px}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › <a href="interior.html">الداخلية</a> › التجنيد والتعبئة</div>
+  <div class="page-head"><div><h1> التجنيد والتعبئة — هيئة التنظيم والإدارة للقوات المسلحة</h1><p>الموقف التجنيدي • التأجيل والإعفاء • الشهادات • التطوع</p></div></div>
+  <div class="tabs" role="tablist" aria-label="أقسام التجنيد">
+    <button role="tab" id="t-ov" aria-selected="true" aria-controls="p-ov"> موقفي التجنيدي</button>
+    <button role="tab" id="t-svc" aria-selected="false" aria-controls="p-svc"> كل الخدمات</button>
+    <button role="tab" id="t-reqs" aria-selected="false" aria-controls="p-reqs"> طلباتي</button>
+  </div>
+  <section id="p-ov" role="tabpanel"><div id="view"></div></section>
+  <section id="p-svc" role="tabpanel" hidden><div id="svcGrid"></div></section>
+  <section id="p-reqs" role="tabpanel" hidden><div class="box"><h3> متابعة طلباتي</h3><div id="reqs"></div></div></section>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const m = D.mil(), st = ID.state(), v = document.getElementById('view'), e = ID.esc, $ = id => document.getElementById(id);
+  function ov() {
+    if (m.st === 'female') { v.innerHTML = '<div class="box empty"><span class="em"></span><h3>الخدمة العسكرية الإلزامية غير مطلوبة</h3><p>التجنيد الإلزامي مقتصر على الذكور. يمكنك التقدم للتطوع أو الكليات العسكرية من تبويب «كل الخدمات».</p></div>'; return; }
+    if (m.st === 'minor') { v.innerHTML = '<div class="box empty"><span class="em"></span><h3>لم تبلغ سن التجنيد بعد</h3><p>يبدأ الموقف التجنيدي عند بلوغ 18 سنة (عام ' + m.year + ').</p></div>'; return; }
+    const done = m.st === 'done';
+    v.innerHTML = '<section class="mil" aria-label="شهادة المعاملة العسكرية"><div class="rank">شهادة المعاملة العسكرية</div><div class="in"><div>' +
+      '<p><b>الاسم:</b> <span class="hl" style="font-size:1.2rem">' + e(u.name) + '</span></p><p><b>الرقم الثلاثي:</b> <span class="mono">' + m.triple + '</span></p><p><b>الموقف التجنيدي:</b> ' + m.label + '</p>' + (done ? '<p><b>تاريخ التسريح:</b> ' + ID.fmtDate(m.release) + '</p>' : '') +
+      '<div class="btn-row no-print"><button class="button sm" id="prCert" type="button"> طباعة شهادة الموقف</button></div></div><div style="text-align:center"><div class="stamp">إدارة التجنيد<br>معتمد</div><div class="qr" id="q"></div></div></div></section>' +
+      '<div class="box" style="margin-top:20px"><h3> تصاريح السفر</h3><div id="permit"></div><div class="btn-row no-print" id="pbtns"></div></div>';
+    ID.qr($('q'), 'DIGITALSEGYPT-DEMO|MIL|' + ID.refCode(u.nid + 'mil'));
+    $('prCert').onclick = () => Gov.printHtml(Gov.DOCS.milcert({}, u));
+    renderPermit();
+  }
+  function renderPermit() {
+    const need = m.st === 'deferred', p = $('permit'), b = $('pbtns');
+    if (!need) p.innerHTML = '<p class="muted">لا يلزم تصريح سفر بحسب موقفك التجنيدي الحالي.</p>';
+    else if (st.permit && st.permit.exp > Date.now()) p.innerHTML = '<div class="permit"><b>تم إصدار تصريح السفر رقم ' + st.permit.no + '</b><br><small>صالح حتى ' + ID.fmtDate(new Date(st.permit.exp)) + ' (30 يوماً من الإصدار)</small></div>';
+    else p.innerHTML = '<p class="muted">الموقف التجنيدي «مؤجل» ويتطلب تصريح سفر قبل المغادرة.</p>';
+    b.innerHTML = (need && !(st.permit && st.permit.exp > Date.now()) ? '<button class="button" id="getPermit" type="button">استخراج تصريح سفر (مجاني)</button>' : '');
+    const g = $('getPermit');
+    if (g) g.onclick = function () {
+      st.permit = { no: 'EF-' + ID.refCode(u.nid + Date.now()).replace('-', ''), exp: Date.now() + 30 * 864e5 }; ID.log('تصريح سفر', 'إصدار تصريح ' + st.permit.no); ID.save();
+      const rec = Gov.freeRec({ t: 'تصريح سفر لموقف تجنيدي مؤجل', org: 'هيئة التنظيم والإدارة للقوات المسلحة' }, [['رقم التصريح', st.permit.no], ['صالح حتى', ID.fmtDate(new Date(st.permit.exp))]]);
+      Gov.receipt(rec.id); renderPermit();
+    };
+  }
+  Gov.grid($('svcGrid'), Gov.CAT.defense, { refresh: ov });
+  Gov.tabs(document, { ov: {}, svc: {}, reqs: { on: () => Gov.requestsList($('reqs')) } }, 'ov');
+  ov();
+});
+</script>
+</body>
+</html>

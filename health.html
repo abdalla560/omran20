@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | الملف الصحي الموحد</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+:root{--hl:#b388ff}
+.rx{background:#fff;color:#333;padding:18px;border-radius:10px;position:relative;font-family:"Courier New",monospace;margin-top:12px}
+.rx .seal{position:absolute;top:10px;left:10px;border:2px solid #6a3ce7;color:#6a3ce7;padding:2px 8px;transform:rotate(-14deg);opacity:.6;font-weight:800}
+.hosp{background:#3498db18;border:1px solid #3498db;border-radius:10px;padding:14px;margin-bottom:10px}
+.ins{color:#eef3ff;background:linear-gradient(135deg,#1c3f5c,#2a6b8a);border-radius:14px;padding:18px}
+.vac{list-style:none;margin:0;padding:0}.vac li{padding:7px 0;border-bottom:1px solid var(--line)}.vac li:last-child{border:0}
+.appt{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+.appt:last-child{border:0}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › وزارة الصحة</div>
+  <div class="page-head"><div><h1>🩺 الملف الطبي الموحد</h1><p>المريض: <b class="hl" id="pn"></b> • فصيلة الدم: <b class="bad" id="bt"></b></p></div></div>
+  <div class="tabs" role="tablist" aria-label="أقسام الصحة">
+    <button role="tab" id="t-records" aria-selected="true" aria-controls="p-records"> الملف الطبي</button>
+    <button role="tab" id="t-insurance" aria-selected="false" aria-controls="p-insurance"> التأمين الصحي</button>
+    <button role="tab" id="t-booking" aria-selected="false" aria-controls="p-booking"> حجز الكشوفات</button>
+    <button role="tab" id="t-services" aria-selected="false" aria-controls="p-services"> الخدمات الطبية</button>
+  </div>
+
+  <section id="p-records" role="tabpanel"><div class="split"><div class="stack">
+    <section class="box edge" style="--c:var(--hl)" aria-labelledby="h-rec"><h3 id="h-rec">🩺 السجل المرضي الحالي</h3><p>الحالة الصحية: <span class="pill ok">مستقرة</span></p><hr><h4>الروشتة الإلكترونية (E-Prescription)</h4>
+      <div class="rx"><span class="seal">APPROVED</span><p><b>Rx:</b> <span id="rxd"></span></p><p><b>Instruction:</b> <span id="rxt"></span></p><small id="rxm" style="color:#555"></small></div>
+      <div class="btn-row no-print"><button class="button sm" id="prRx" type="button"> طباعة الروشتة</button></div></section>
+    <section class="box" aria-labelledby="h-vac"><h3 id="h-vac"> سجل التطعيمات واللقاحات</h3><ul class="vac" id="vac"></ul></section></div>
+    <aside class="stack"><section class="box accent" id="emergency" style="--c:var(--bad)" aria-labelledby="h-em"><h3 id="h-em"> </h3>
+    
+      
+
+  <section id="p-insurance" role="tabpanel" hidden><section class="box" aria-labelledby="h-ins"><h3 id="h-ins"> التأمين الصحي الشامل</h3>
+    <div class="ins"><p style="margin:0;opacity:.8">بطاقة التأمين الصحي</p><p class="mono" style="font-size:1.3rem;margin:6px 0" id="insNo"></p><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span id="insName"></span><span>سارٍ حتى <b id="insExp"></b></span></div></div>
+    <div class="btn-row"><button class="button sm" id="insRenew" type="button"> تجديد البطاقة</button><button class="button outline sm" id="insLost" type="button">بدل فاقد</button><button class="button ghost sm" id="insPr" type="button"> طباعة بيانات البطاقة</button></div></section></section>
+
+  <section id="p-booking" role="tabpanel" hidden><div class="split even">
+    <section class="box" aria-labelledby="h-bk"><h3 id="h-bk"> حجز العيادات بالمستشفيات الحكومية</h3><div id="hosp"></div></section>
+    <section class="box" aria-labelledby="h-ap"><h3 id="h-ap"> مواعيدي الطبية</h3><div id="appts"></div></section></div></section>
+
+  <section id="p-services" role="tabpanel" hidden><div id="svcGrid"></div><h3 class="section-title"> متابعة الطلبات</h3><div id="reqs"></div></section>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const $ = id => document.getElementById(id), h = D.health(), st = ID.state(), e = ID.esc, L = Gov.CAT.health, find = id => L.find(x => x.id === id);
+  const CLINICS = ['الباطنة', 'العظام', 'الرمد', 'الأطفال', 'النساء والتوليد', 'الأسنان', 'الجلدية', 'الأنف والأذن', 'القلب'];
+  const DOCS = ['د. أحمد كمال', 'د. منى عبد الرحمن', 'د. خالد سمير', 'د. هبة الشريف', 'د. محمود فاروق', 'د. سارة نبيل', 'د. طارق حسن', 'د. نهى عادل'];
+  const rxHtml = () => Gov.DOCS.generic({ title: 'روشتة إلكترونية', rows: [['Rx', h.med.d], ['Instruction', h.med.t], ['التاريخ', ID.fmtDate(h.rxDate)], ['الطبيب', 'د. أحمد كمال - ' + h.hosp[1]], ['فصيلة الدم', h.blood]] }, u);
+  $('pn').textContent = u.name; $('bt').textContent = h.blood;
+  $('rxd').textContent = h.med.d; $('rxt').textContent = h.med.t; $('rxm').textContent = 'بتاريخ: ' + ID.fmtDate(h.rxDate) + ' | د. أحمد كمال - ' + h.hosp[1];
+  $('vac').innerHTML = h.vac.slice(0, 2).map(v => '<li> ' + v + ' - مكتمل</li>').join('') + '<li> جرعة تكميلية - الموعد القادم: ' + ID.fmtDate(h.next) + '</li>';
+  $('prRx').onclick = () => Gov.printHtml(rxHtml());
+  function renderIns() { const i = Gov.insData(u); $('insNo').textContent = i.no; $('insName').textContent = u.name; $('insExp').textContent = ID.fmtDate(i.exp); }
+  $('insRenew').onclick = () => Gov.run(find('ins_renew'), { refresh: renderIns });
+  $('insLost').onclick = () => Gov.run(find('ins_replace'), {});
+  $('insPr').onclick = () => { const i = Gov.insData(u); Gov.printHtml(Gov.DOCS.generic({ title: 'بطاقة التأمين الصحي الشامل', rows: [['رقم البطاقة', i.no], ['سارية حتى', ID.fmtDate(i.exp)]] }, u)); };
+  $('hosp').innerHTML = h.hosp.map((n, i) => '<div class="hosp"><b>' + e(n) + '</b><p style="font-size:.85rem" class="muted">متاح: ' + CLINICS.slice(0, 5).join('، ') + ' وغيرها</p><button class="button sm" type="button" data-i="' + i + '">حجز كشف</button></div>').join('');
+  $('hosp').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-i]'); if (!b) return; const name = h.hosp[b.dataset.i];
+    Gov.bookDialog({ title: 'حجز كشف - ' + name, place: name, skip: 1, extra: [{ label: 'العيادة / التخصص', options: CLINICS }] }).then(v => {
+      if (!v) return; const clinic = v.extra[0], doctor = DOCS[ID.hash(name + clinic) % DOCS.length];
+      const a = Gov.addAppt({ kind: 'health', mode: 'visit', title: 'كشف ' + clinic + ' - ' + name, what: 'كشف بعيادة ' + clinic, clinic, doctor, hospital: name, place: name, date: v.date, time: v.time, queue: 1 + ID.hash(name + v.date + v.time) % 40, docs: 'أصل بطاقة الرقم القومي + بطاقة التأمين الصحي (إن وُجدت)', note: 'تُسدد رسوم الكشف بخزينة المستشفى.' });
+      renderAppts(); Gov.apptModal(a);
+    });
+  });
+  function renderAppts() {
+    const L2 = st.appointments.filter(a => a.kind === 'health' || !a.kind).sort((a, b) => (a.date + (a.time || '')) < (b.date + (b.time || '')) ? -1 : 1);
+    $('appts').innerHTML = L2.length ? L2.map(a => '<div class="appt"><div><b>' + e(a.clinic) + '</b> - ' + e(a.hospital || a.place) + '<br><small>' + Gov.dayLabel(a.date) + ' • ' + e(a.time || '10:00 ص') + (a.doctor ? ' • ' + e(a.doctor) : '') + '</small></div><div class="btn-row" style="margin:0"><button class="button sm" type="button" data-p="' + a.id + '"> ورقة الحجز</button><button class="button ghost sm" type="button" data-c="' + a.id + '">إلغاء</button></div></div>').join('') : '<p class="muted">لا توجد مواعيد محجوزة.</p>';
+  }
+  $('appts').addEventListener('click', ev => {
+    const p = ev.target.closest('[data-p]'), c = ev.target.closest('[data-c]');
+    if (p) { const a = st.appointments.find(x => String(x.id) === p.dataset.p); if (a) Gov.apptModal(a.mode ? a : Object.assign({ mode: 'visit', what: 'كشف بعيادة ' + a.clinic, place: a.hospital, time: '10:00 ص' }, a)); }
+    if (c) ID.confirm('إلغاء الموعد', 'هل تريد إلغاء هذا الحجز؟', 'إلغاء الحجز', true).then(ok => { if (!ok) return; st.appointments = st.appointments.filter(a => String(a.id) !== c.dataset.c); ID.log('إلغاء حجز', 'تم إلغاء موعد طبي'); ID.save(); renderAppts(); });
+  });
+  $('em').onclick = () => ID.confirm('محاكاة استدعاء الطوارئ', 'هذه محاكاة فقط ولن يتم الاتصال بأي جهة. هل تريد المتابعة؟', 'محاكاة').then(ok => { if (ok) { ID.log('محاكاة طوارئ', 'تجربة زر الطوارئ'); ID.toast('تمت المحاكاة - لا يوجد اتصال فعلي'); } });
+  Gov.grid($('svcGrid'), L, { refresh: renderIns });
+  Gov.tabs(document, { records: {}, insurance: {}, booking: {}, services: { on: () => Gov.requestsList($('reqs'), r => /الصحة/.test(r.org)) } }, 'records');
+  renderIns(); renderAppts();
+});
+</script>
+</body>
+</html>

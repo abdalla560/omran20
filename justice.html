@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | الشهر العقاري والتوثيق</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.item{background:#ffffff0a;border-inline-start:5px solid #7f8c8d;border-radius:12px;padding:16px;margin-bottom:12px}
+.item.green{border-inline-start-color:var(--ok)}
+.item h4{margin:6px 0}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › وزارة العدل › الشهر العقاري</div>
+  <div class="page-head"><div><h1> بوابة الشهر العقاري والتوثيق الرقمية</h1><p>المواطن: <b class="hl" id="on"></b> • الرقم القومي: <span class="mono" id="oi"></span></p></div><a class="button ghost sm" href="inheritance.html">حصر الورثة</a></div>
+
+  <div class="tabs" role="tablist" aria-label="أقسام الشهر العقاري">
+    <button role="tab" id="t-ov" aria-selected="true" aria-controls="p-ov"> ملفي العقاري</button>
+    <button role="tab" id="t-svc" aria-selected="false" aria-controls="p-svc"> كل الخدمات</button>
+    <button role="tab" id="t-reqs" aria-selected="false" aria-controls="p-reqs"> طلباتي</button>
+  </div>
+  <section id="p-ov" role="tabpanel">
+  <div class="split">
+    <div class="stack">
+      <section class="box" aria-labelledby="h-p"><h3 id="h-p"> سجل الأملاك العقارية الموثقة</h3><div id="props"></div></section>
+      <section class="box" aria-labelledby="h-x"><h3 id="h-x"> التوكيلات الصادرة</h3><div id="proxies"></div>
+        <div class="btn-row"><button class="button" id="newProxy" type="button">عمل توكيل جديد (برسوم)</button></div></section>
+    </div>
+    <aside class="stack">
+      <section class="box accent" style="--c:var(--bad)" aria-labelledby="h-c"><h3 id="h-c"> المحاكم والقضايا</h3>
+        <p>الحالة القضائية: <span class="pill ok">لا توجد قضايا مرفوعة</span></p><hr>
+        <button class="button ghost sm" id="rulings" type="button">الاستعلام عن الأحكام</button></section>
+      <section class="box" aria-labelledby="h-r"><h3 id="h-r"> طلب شهادة عقارية</h3><p class="muted" style="font-size:.9rem">استخراج شهادة قيود عينية أو تصرفات عقارية.</p>
+        <button class="button" id="propCert" type="button">طلب الشهادة (50 جم)</button></section>
+    </aside>
+  </div>
+
+  </section>
+  <section id="p-svc" role="tabpanel" hidden><div id="svcGrid"></div></section>
+  <section id="p-reqs" role="tabpanel" hidden><div class="box"><h3>📨 متابعة طلباتي</h3><div id="reqs"></div></div></section>
+
+  <article class="paper" id="doc" style="margin-top:22px" hidden>
+    <div class="head"><img class="logo" src="assets/img/logo-digitals.svg" alt=""><h2>وزارة العدل</h2><h3>مصلحة الشهر العقاري والتوثيق</h3><h4 id="dType"></h4></div>
+    <p>إنه في يوم <span class="val" id="dDate"></span> تم توثيق هذا المستند إلكترونياً.</p>
+    <p>بموجب هذا المستند، يمتلك/ يُمثَّل السيد/ <span class="val" id="dOwner"></span></p>
+    <div id="dDesc"></div>
+    <p>رقم القيد الدفتري: <span class="val" id="dRef"></span></p>
+    <div class="foot"><div class="qr" id="dQr"></div><div class="seal">مصلحة الشهر العقاري<br>توثيق رقمي</div></div>
+    <div class="btn-row no-print"><button class="button" type="button" onclick="window.print()"> طباعة المستند</button><button class="button ghost" type="button" id="dX">إغلاق</button></div>
+  </article>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const $ = id => document.getElementById(id), P = D.props(), st = ID.state(), e = ID.esc;
+  const PROX = ['توكيل رسمي عام قضايا', 'توكيل في الأمور الزوجية', 'توكيل خاص ببيع سيارة', 'توكيل إدارة ممتلكات'];
+  $('on').textContent = u.name; $('oi').textContent = u.nid;
+
+  function viewDoc(type, descHtml, ref) {
+    $('dType').textContent = type; $('dOwner').textContent = u.name; $('dDesc').innerHTML = descHtml; $('dRef').textContent = ref; $('dDate').textContent = ID.fmtDate(new Date());
+    ID.qr($('dQr'), 'DIGITALSEGYPT-DEMO|JUSTICE|' + ID.refCode(u.nid + ref)); $('doc').hidden = false; $('doc').scrollIntoView({ behavior: 'smooth' });
+    ID.log('مستند موثق', type);
+  }
+  $('props').innerHTML = P.length ? P.map((p, i) => '<div class="item"><span class="pill ok">مشهر برقم ' + p.ref + '</span><h4>' + p.name + '</h4><p class="muted" style="font-size:.88rem">تاريخ التسجيل: ' + p.year + '/05/12 • القيمة التقديرية: ' + ID.fmt(p.value) + ' جم</p><button class="button outline sm" data-p="' + i + '" type="button">معاينة العقد</button></div>').join('') : '<div class="empty"><span class="em"></span>لا توجد أملاك عقارية مسجلة على هذا الرقم القومي.</div>';
+  $('props').addEventListener('click', ev => { const b = ev.target.closest('[data-p]'); if (!b) return; const p = P[b.dataset.p]; viewDoc('عقد ملكية نهائي مشهر', '<p>الموضوع: ' + p.name + '</p>', p.ref); });
+
+  function renderProx() {
+    const def = { type: PROX[ID.hash(u.nid) % 4], agent: 'محامي الموكل', ref: 'T-' + (ID.hash(u.nid) % 900000 + 100000) };
+    const all = [def].concat(st.proxies);
+    $('proxies').innerHTML = all.map((x, i) => '<div class="item green"><span class="pill ok">فعّال</span><h4>' + e(x.type) + '</h4><p class="muted" style="font-size:.88rem">صادر لصالح: ' + e(x.agent) + '</p><button class="button outline sm" data-x="' + i + '" type="button" style="border-color:var(--ok);color:var(--ok)">عرض التوكيل</button></div>').join('');
+    $('proxies')._all = all;
+  }
+  $('proxies').addEventListener('click', ev => { const b = ev.target.closest('[data-x]'); if (!b) return; const x = $('proxies')._all[b.dataset.x]; viewDoc('توكيل رسمي', '<p>نوع التوكيل: ' + e(x.type) + '</p><p>صادر لصالح: ' + e(x.agent) + '</p>', x.ref); });
+  const JL = Gov.CAT.justice, jf = id => JL.find(x => x.id === id);
+  $('newProxy').onclick = () => Gov.run(jf('proxy_new'), { refresh: renderProx });
+  $('rulings').onclick = () => ID.confirm('الاستعلام عن الأحكام', 'لا توجد أحكام قضائية مسجلة على الرقم القومي ' + u.nid + ' حتى تاريخ اليوم.', 'حسناً').then(() => ID.log('استعلام أحكام', 'لا توجد أحكام'));
+  $('propCert').onclick = () => Gov.run(jf('prop_cert'), {});
+  $('dX').onclick = () => { $('doc').hidden = true; };
+  renderProx();
+  Gov.grid($('svcGrid'), JL, { refresh: renderProx });
+  Gov.tabs(document, { ov: {}, svc: {}, reqs: { on: () => Gov.requestsList($('reqs'), r => /الشهر العقاري/.test(r.org)) } }, 'ov');
+});
+</script>
+</body>
+</html>

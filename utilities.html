@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | منظومة المرافق الموحدة</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+:root{--electric:#ffc247;--water:#4cc9f0;--gas:#ff7a59;--net:#b388ff}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.hello{color:var(--muted);margin:0 0 22px}
+.hello b{color:var(--brand)}
+.summary{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:24px}
+.summary .num{font-size:1.8rem;font-weight:bold;color:var(--brand)}
+.summary small{color:var(--muted);display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:16px;padding:22px;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.ring{position:relative;width:84px;height:84px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:var(--c);stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.ring span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:var(--c)}
+.card h3{margin:0}
+.badge{display:inline-block;font-size:.78rem;padding:2px 10px;border-radius:20px;margin-top:4px;font-weight:bold}
+.badge.ok{background:#3ddc9722;color:var(--ok)}
+.badge.warn{background:#ffb02022;color:var(--warn)}
+.badge.bad{background:#ff5c6c22;color:var(--bad)}
+.badge.off{background:#8fb0bd22;color:var(--muted)}
+.card p{margin:4px 0;color:var(--muted)}
+.card p strong{color:var(--text);font-size:1.15rem}
+.pend{color:var(--brand)!important;font-size:.9rem}
+.actions{margin-top:auto;padding-top:16px;display:flex;flex-direction:column;gap:8px}
+.btn{padding:11px;border:0;border-radius:10px;font-weight:bold;font-size:1rem;cursor:pointer;background:var(--c);color:#111;font-family:inherit}
+.btn:hover{filter:brightness(1.1)}
+.btn.outline{background:none;border:1.5px solid var(--c);color:var(--c)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--text)}
+.history{margin-top:30px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.history h2{margin:0 0 10px;font-size:1.2rem}
+.history ul{list-style:none;margin:0;padding:0}
+.history li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+.history li:last-child{border:0}
+.history li b{color:var(--text)}
+.history .empty{display:block}
+.tools{margin-top:18px}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-family:inherit}
+.overlay{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.overlay.open{display:flex}
+.modal{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:24px;width:100%;max-width:420px;max-height:92vh;overflow:auto}
+.modal h2{margin:0 0 6px}
+.note{color:var(--muted);font-size:.92rem;margin:0 0 4px}
+.modal label{display:block;margin:12px 0 6px;color:var(--muted)}
+.modal input,.modal select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:1rem;font-family:inherit}
+.modal input[aria-invalid="true"]{border-color:var(--bad)}
+.ferr{color:var(--bad);font-size:.85rem;min-height:1.2em}
+.chips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.chip{padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:none;color:var(--text);cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--c)}
+.err{color:var(--bad);min-height:1.4em;margin:8px 0 0;font-size:.9rem}
+.row{display:flex;gap:10px;margin-top:12px}
+.row .btn{flex:1}
+.done{text-align:center;padding:10px 0}
+.done .tick{width:64px;height:64px;border-radius:50%;background:var(--ok);color:#06210f;font-size:2rem;font-weight:bold;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.done h2{margin-bottom:6px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ok);color:#06210f;padding:12px 22px;border-radius:12px;font-weight:bold;opacity:0;transition:.3s;z-index:30;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › المرافق</div>
+  <div class="page-head"><div><h1> إدارة المرافق الذكية</h1></div></div>
+  <p class="hello">مرحباً بالسيد/ <b id="user-name-display"></b></p>
+
+  <div class="summary">
+    <div><small>إجمالي المستحق هذا الشهر</small><span class="num" id="total-due">0</span> <span>جم</span></div>
+    <div><small>خدمات تحتاج انتباهك</small><span class="num" id="alerts">0</span></div>
+    <div><small>طلبات قيد المراجعة</small><span class="num" id="pending">0</span></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="history"><h2>آخر العمليات والطلبات</h2><ul id="history"></ul></div>
+  <div class="tools"><button class="link" id="reset">إعادة تعيين البيانات التجريبية</button></div>
+</main>
+
+<!-- نافذة الدفع / الشحن -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="modal" id="modal">
+    <h2 id="m-title"></h2>
+    <div class="note" id="m-info"></div>
+    <label for="m-amount" id="m-label"></label>
+    <input id="m-amount" type="number" min="1" inputmode="numeric">
+    <div class="chips" id="chips"></div>
+    <p class="err" id="m-err" role="alert"></p>
+    <div class="row"><button class="btn" id="m-ok">تأكيد</button><button class="btn ghost" id="m-cancel">إلغاء</button></div>
+  </div>
+</div>
+
+<!-- نافذة تسجيل البيانات (إضافة عداد / تقديم على عداد) -->
+<div class="overlay" id="foverlay" role="dialog" aria-modal="true" aria-labelledby="f-title">
+  <div class="modal" id="fmodal">
+    <div id="f-form">
+      <h2 id="f-title"></h2>
+      <p class="note" id="f-status"></p>
+      <div id="f-body"></div>
+      <div class="row"><button class="btn" id="f-ok">تقديم الطلب</button><button class="btn ghost" id="f-cancel">إلغاء</button></div>
+    </div>
+    <div class="done" id="f-done" hidden>
+      <div class="tick" aria-hidden="true">✓</div>
+      <h2>تم تقديم طلبك بنجاح</h2>
+      <p class="note" id="f-done-msg"></p>
+      <div class="row"><button class="btn" id="f-close">تمام</button></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script>
+ID.ready(function () {
+  const U = ID.state().util, save = () => { U.data = data; U.history = history; ID.save(); };
+  const rnd = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+  const $ = id => document.getElementById(id);
+  const userName = () => ID.user().name;
+
+  // added = هل يوجد عداد مضاف؟ | pending = عدد الطلبات قيد المراجعة
+  function seedOne(k, id) {
+    const m = {
+      elec:  () => ({ balance: rnd(10, 500) }),
+      water: () => ({ usage: rnd(5, 40), due: rnd(20, 150) }),
+      gas:   () => ({ due: rnd(30, 200) }),
+      net:   () => ({ total: 140, left: rnd(1, 140) })
+    };
+    return Object.assign({ id: id, added: true, pending: 0 }, m[k]());
+  }
+  function seed() {
+    return {
+      elec:  seedOne('elec', rnd(100000, 999999)),
+      water: seedOne('water', rnd(2000, 8000)),
+      gas:   seedOne('gas', '11-44-' + rnd(100, 999)),
+      net:   { id: '', added: false, pending: 0, total: 140, left: 0 }   // مفيش خط مضاف
+    };
+  }
+  let history = U.history || [];
+  let data = U.data || null; if (!data) { data = seed(); save(); }
+
+  const services = {
+    elec: { icon: '⚡', title: 'الكهرباء', color: 'var(--electric)', idLabel: 'رقم العداد', canAdd: true,
+      addWord: 'عداد كهرباء', applyWord: 'عداد كهرباء', extra: ['نوع الاستخدام', ['سكني', 'تجاري', 'صناعي']],
+      line: d => ['الرصيد المتبقي', d.balance + ' جم'],
+      pct: d => Math.min(100, Math.round(d.balance / 500 * 100)),
+      status: d => d.balance < 50 ? ['bad', 'رصيد منخفض'] : d.balance < 150 ? ['warn', 'قارب على النفاد'] : ['ok', 'رصيد كافٍ'],
+      due: () => 0, btn: 'شحن الكارت', label: 'مبلغ الشحن (جم)', chips: [50, 100, 200],
+      apply: (d, v) => { d.balance += v; } },
+    water: { icon: '', title: 'المياه', color: 'var(--water)', idLabel: 'كود المشترك', canAdd: true,
+      addWord: 'عداد مياه', applyWord: 'عداد مياه', extra: ['نوع الوحدة', ['سكني', 'تجاري']],
+      line: d => ['الاستهلاك / المستحق', d.usage + ' م³ / ' + d.due + ' جم'],
+      pct: d => d.due ? Math.min(100, Math.round(d.usage / 50 * 100)) : 0,
+      status: d => d.due ? ['warn', 'فاتورة مستحقة'] : ['ok', 'مدفوعة'],
+      due: d => d.due, btn: 'دفع الفاتورة', label: 'المبلغ (جم)', full: true,
+      apply: (d, v) => { d.due = Math.max(0, d.due - v); } },
+    gas: { icon: '', title: 'الغاز الطبيعي', color: 'var(--gas)', idLabel: 'رقم الحساب', canAdd: false,
+      applyWord: 'عداد غاز', extra: ['نوع الوحدة', ['سكني', 'تجاري']],
+      line: d => ['فاتورة الشهر', d.due + ' جم'],
+      pct: d => d.due ? Math.min(100, Math.round(d.due / 200 * 100)) : 0,
+      status: d => d.due ? ['warn', 'فاتورة مستحقة'] : ['ok', 'مدفوعة'],
+      due: d => d.due, btn: 'سداد فوري', label: 'المبلغ (جم)', full: true,
+      apply: (d, v) => { d.due = Math.max(0, d.due - v); } },
+    net: { icon: '', title: 'الإنترنت', color: 'var(--net)', idLabel: 'رقم الخط', canAdd: true,
+      addWord: 'خط إنترنت', applyWord: 'خط إنترنت', extra: ['الباقة المطلوبة', ['140 GB', '250 GB', '400 GB']],
+      line: d => ['المتبقي', d.left + ' / ' + d.total + ' GB'],
+      pct: d => Math.round(d.left / d.total * 100),
+      status: d => d.left < 15 ? ['bad', 'الباقة على وشك النفاد'] : d.left < 40 ? ['warn', 'استهلاك مرتفع'] : ['ok', 'باقة كافية'],
+      due: () => 0, btn: 'تجديد الباقة', label: 'سعر التجديد (جم)', fixed: 120,
+      apply: d => { d.left = d.total; } }
+  };
+
+  function log(title, text) {
+    history.unshift({ title: title, text: text, time: new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }) });
+    history = history.slice(0, 20); save();
+  }
+
+  // ---------- الرسم ----------
+  const R = 34, C = 2 * Math.PI * R;
+  function ringSvg(p) {
+    return '<svg width="84" height="84" viewBox="0 0 84 84"><circle class="bg" cx="42" cy="42" r="' + R + '"/>' +
+      '<circle class="fg" cx="42" cy="42" r="' + R + '" stroke-dasharray="' + C + '" stroke-dashoffset="' + C + '" data-p="' + p + '"/></svg>';
+  }
+  function render() {
+    $('grid').innerHTML = '';
+    let total = 0, alerts = 0, pend = 0;
+    Object.keys(services).forEach(k => {
+      const s = services[k], d = data[k];
+      const card = document.createElement('div');
+      card.className = 'card'; card.style.setProperty('--c', s.color);
+      pend += d.pending || 0;
+      let html;
+      if (d.added) {
+        const p = s.pct(d), st = s.status(d), ln = s.line(d);
+        total += s.due(d); if (st[0] !== 'ok') alerts++;
+        html = '<div class="top"><div class="ring">' + ringSvg(p) + '<span>' + p + '%</span></div>' +
+          '<div><h3>' + s.icon + ' ' + s.title + '</h3><span class="badge ' + st[0] + '">' + st[1] + '</span></div></div>' +
+          '<p>' + s.idLabel + ': <span class="mid"></span></p>' +
+          '<p>' + ln[0] + ': <strong>' + ln[1] + '</strong></p>';
+      } else {
+        html = '<div class="top"><div class="ring">' + ringSvg(0) + '<span>' + s.icon + '</span></div>' +
+          '<div><h3>' + s.title + '</h3><span class="badge off">لا يوجد عداد مضاف</span></div></div>' +
+          '<p>' + (s.canAdd ? 'أضف ' + s.addWord + ' لمتابعة بياناتك، أو قدّم على ' + s.applyWord + ' جديد.' : 'قدّم على ' + s.applyWord + ' جديد.') + '</p>';
+      }
+      if (d.pending) html += '<p class="pend">طلبات قيد المراجعة: ' + d.pending + '</p>';
+      html += '<div class="actions">';
+      if (d.added) html += '<button class="btn" data-a="pay" data-k="' + k + '">' + s.btn + '</button>';
+      if (s.canAdd) html += '<button class="btn outline" data-a="add" data-k="' + k + '">' + (d.added ? 'تغيير ' : 'إضافة ') + s.addWord + '</button>';
+      html += '<button class="btn outline" data-a="apply" data-k="' + k + '">تقديم على ' + s.applyWord + '</button></div>';
+      card.innerHTML = html;
+      const mid = card.querySelector('.mid'); if (mid) mid.textContent = d.id;
+      $('grid').appendChild(card);
+    });
+    requestAnimationFrame(() => document.querySelectorAll('.fg').forEach(c => {
+      c.style.strokeDashoffset = C * (1 - c.dataset.p / 100);
+    }));
+    $('total-due').textContent = total; $('alerts').textContent = alerts; $('pending').textContent = pend;
+    renderHistory();
+  }
+  function renderHistory() {
+    const ul = $('history'); ul.innerHTML = '';
+    if (!history.length) { ul.innerHTML = '<li class="empty">لا توجد عمليات بعد. ابدأ بشحن أو دفع أو تقديم طلب.</li>'; return; }
+    history.slice(0, 6).forEach(h => {
+      const li = document.createElement('li'), a = document.createElement('span'), b = document.createElement('b'), t = document.createElement('span');
+      b.textContent = h.title; a.appendChild(b); a.appendChild(document.createTextNode(' · ' + h.text));
+      t.textContent = h.time; li.appendChild(a); li.appendChild(t); ul.appendChild(li);
+    });
+  }
+  function toast(msg) {
+    const t = $('toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  // ---------- نافذة الدفع ----------
+  let cur = null, lastFocus = null;
+  function openPay(k) {
+    cur = k; const s = services[k], d = data[k]; lastFocus = document.activeElement;
+    $('modal').style.setProperty('--c', s.color);
+    $('m-title').textContent = s.btn + ' - ' + s.title;
+    $('m-info').textContent = s.line(d).join(': ');
+    $('m-label').textContent = s.label;
+    const inp = $('m-amount'); inp.value = s.fixed || (s.full ? d.due : ''); inp.readOnly = !!s.fixed;
+    $('m-err').textContent = ''; $('chips').innerHTML = '';
+    (s.chips || []).forEach(v => {
+      const b = document.createElement('button'); b.className = 'chip'; b.type = 'button'; b.textContent = v + ' جم';
+      b.onclick = () => { inp.value = v; }; $('chips').appendChild(b);
+    });
+    $('overlay').classList.add('open'); inp.focus();
+  }
+  function closePay() { $('overlay').classList.remove('open'); if (lastFocus) lastFocus.focus(); }
+  function confirmPay() {
+    const s = services[cur], v = Number($('m-amount').value);
+    if (!v || v <= 0) { $('m-err').textContent = 'اكتب مبلغاً أكبر من صفر.'; return; }
+    if (s.full && data[cur].due === 0) { $('m-err').textContent = 'لا يوجد مبلغ مستحق.'; return; }
+    if (s.full && v > data[cur].due) { $('m-err').textContent = 'المبلغ أكبر من المستحق (' + data[cur].due + ' جم).'; return; }
+    const pr = ID.pay(v, s.title + ' - ' + s.btn); if (!pr.ok) { $('m-err').textContent = pr.err; return; }
+    s.apply(data[cur], v); save(); log(s.title, v + ' جم');
+    closePay(); render(); toast('تمت العملية بنجاح');
+  }
+
+  // ---------- نافذة تسجيل البيانات ----------
+  let fcur = null, fields = [];
+  const T = {
+    name:  { id: 'name',  label: 'الاسم بالكامل', test: v => v.length >= 3, msg: 'اكتب الاسم بالكامل.' },
+    nid:   { id: 'nid',   label: 'الرقم القومي (14 رقم)', im: 1, test: v => /^\d{14}$/.test(v), msg: 'الرقم القومي لازم يكون 14 رقماً.' },
+    phone: { id: 'phone', label: 'رقم الموبايل', im: 1, test: v => /^01\d{9}$/.test(v), msg: 'الموبايل لازم يكون 11 رقماً ويبدأ بـ 01.' },
+    addr:  { id: 'addr',  label: 'العنوان بالتفصيل', test: v => v.length >= 8, msg: 'اكتب عنواناً أوضح (8 أحرف على الأقل).' }
+  };
+  function openForm(k, mode) {
+    const s = services[k], d = data[k]; lastFocus = document.activeElement;
+    fcur = { k: k, mode: mode };
+    $('fmodal').style.setProperty('--c', s.color);
+    $('f-form').hidden = false; $('f-done').hidden = true;
+    if (mode === 'add') {
+      $('f-title').textContent = (d.added ? 'تغيير ' : 'إضافة ') + s.addWord;
+      $('f-status').textContent = d.added ? 'العداد المضاف حالياً: ' + d.id + '. سيتم استبداله بالعداد الجديد.' : 'لا يوجد ' + s.addWord + ' مضاف على حسابك حتى الآن.';
+      fields = [{ id: 'meter', label: s.idLabel, im: 1, test: v => /^[\d-]{4,14}$/.test(v), msg: 'اكتب ' + s.idLabel + ' من 4 إلى 14 رقماً.' },
+        Object.assign({}, T.name), Object.assign({}, T.phone)];
+    } else {
+      $('f-title').textContent = 'تقديم على ' + s.applyWord;
+      $('f-status').textContent = d.added
+        ? 'لديك اشتراك مضاف بالفعل (' + d.id + '). هذا الطلب لوحدة أو عداد جديد.'
+        : 'لا يوجد ' + s.applyWord + ' مضاف على حسابك. أكمل البيانات لتقديم الطلب.';
+      if (d.pending) $('f-status').textContent += ' لديك ' + d.pending + ' طلب قيد المراجعة.';
+      fields = [T.name, T.nid, T.phone, T.addr, { id: 'extra', label: s.extra[0], select: s.extra[1] }];
+    }
+    $('f-body').innerHTML = fields.map(f => f.select
+      ? '<label for="f-' + f.id + '">' + f.label + '</label><select id="f-' + f.id + '">' + f.select.map(o => '<option>' + o + '</option>').join('') + '</select><div class="ferr"></div>'
+      : '<label for="f-' + f.id + '">' + f.label + '</label><input id="f-' + f.id + '" type="text" autocomplete="off"' + (f.im ? ' inputmode="numeric"' : '') + '><div class="ferr" id="e-' + f.id + '"></div>').join('');
+    if ($('f-name')) $('f-name').value = userName(); if ($('f-nid')) $('f-nid').value = ID.user().nid;
+    $('foverlay').classList.add('open'); $('f-body').querySelector('input,select').focus();
+  }
+  function closeForm() { $('foverlay').classList.remove('open'); if (lastFocus) lastFocus.focus(); }
+  function submitForm() {
+    let first = null; const vals = {};
+    fields.forEach(f => {
+      const i = $('f-' + f.id), v = i.value.trim(); vals[f.id] = v;
+      if (f.select) return;
+      const ok = f.test(v); $('e-' + f.id).textContent = ok ? '' : f.msg; i.setAttribute('aria-invalid', String(!ok));
+      if (!ok && !first) first = i;
+    });
+    if (first) { first.focus(); return; }
+    const k = fcur.k, s = services[k]; let msg;
+    if (fcur.mode === 'add') {
+      const p = data[k].pending || 0; data[k] = seedOne(k, vals.meter); data[k].pending = p;
+      log(s.title, 'تم ربط ' + s.addWord + ' رقم ' + vals.meter);
+      msg = 'تم ربط ' + s.addWord + ' رقم ' + vals.meter + ' بحسابك.';
+    } else {
+      const no = 'ID-' + rnd(100000, 999999);
+      data[k].pending = (data[k].pending || 0) + 1;
+      log(s.title, 'طلب تقديم على ' + s.applyWord + ' (' + no + ') قيد المراجعة');
+      msg = 'رقم طلبك: ' + no + '. سنتواصل معك على رقم الموبايل المسجل.';
+    }
+    save(); render();
+    $('f-done-msg').textContent = msg; $('f-form').hidden = true; $('f-done').hidden = false;
+    $('f-close').focus(); toast('تم تقديم طلبك بنجاح');
+  }
+
+  // ---------- الأحداث ----------
+  $('grid').addEventListener('click', e => {
+    const b = e.target.closest('button[data-a]'); if (!b) return;
+    if (b.dataset.a === 'pay') openPay(b.dataset.k); else openForm(b.dataset.k, b.dataset.a);
+  });
+  $('m-ok').onclick = confirmPay; $('m-cancel').onclick = closePay;
+  $('f-ok').onclick = submitForm; $('f-cancel').onclick = closeForm; $('f-close').onclick = closeForm;
+  $('overlay').addEventListener('click', e => { if (e.target.id === 'overlay') closePay(); });
+  $('foverlay').addEventListener('click', e => { if (e.target.id === 'foverlay') closeForm(); });
+  $('m-amount').addEventListener('keydown', e => { if (e.key === 'Enter') confirmPay(); });
+  $('f-body').addEventListener('keydown', e => { if (e.key === 'Enter') submitForm(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePay(); closeForm(); } });
+  $('reset').onclick = () => {
+    if (!confirm('سيتم مسح البيانات والطلبات الحالية وتوليد بيانات جديدة. هل تريد المتابعة؟')) return;
+    data = seed(); history = []; save(); render(); toast('تمت إعادة التعيين');
+  };
+
+  $('user-name-display').textContent = userName();
+  render();
+});
+</script>
+</body>
+</html>

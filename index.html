@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Digitals EGYPT — هويتك الرقمية المتكاملة: منصة ذكية موحدة لإدارة ومتابعة الخدمات الحكومية (نموذج تجريبي)">
+<title>Digitals EGYPT | هويتك الرقمية المتكاملة</title>
+<link rel="icon" href="assets/img/favicon.png">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+/* ================= الصفحة الرئيسية (Digitals EGYPT) — ألوان موحّدة تتبع الوضع (فاتح/داكن) ================= */
+.dg-hero{position:relative;background:url(assets/img/hero-photo.jpg) center top/cover no-repeat,var(--bg);color:var(--text);padding:18px 20px 0;min-height:min(100vh,900px);display:flex;flex-direction:column}
+.dg-hero::after{content:"";position:absolute;inset:0;background:var(--hero-ov);pointer-events:none}
+.dg-hero>*{position:relative;z-index:1}
+.dg-nav{max-width:1320px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--glass-line);border-radius:999px;padding:8px 24px;box-shadow:var(--shadow)}
+.dg-brand{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none}
+.dg-brand img{height:50px;width:50px;border-radius:14px}
+.dg-brand b{display:block;font-size:1.15rem;line-height:1.3;letter-spacing:.3px}
+.dg-brand small{color:var(--brand);font-size:.76rem;display:block;font-weight:700}
+.dg-links{display:flex;gap:6px;align-items:center;list-style:none;margin:0;padding:0}
+.dg-links a{display:block;color:var(--text);text-decoration:none;padding:8px 18px;font-weight:700;font-size:.97rem;border-bottom:3px solid transparent;opacity:.85}
+.dg-links a:hover{opacity:1;color:var(--brand)}
+.dg-links a.on{color:var(--brand);border-bottom-color:var(--brand);opacity:1}
+.dg-tools{display:flex;align-items:center;gap:8px}
+.dg-tools .icon-btn{background:transparent;border-color:transparent;color:var(--text)}
+.dg-tools .icon-btn:hover{border-color:var(--brand)}
+.dg-tools .sep{width:1px;height:22px;background:var(--glass-line)}
+.dg-burger{display:none;background:transparent;color:var(--text)}
+.hero-body{flex:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;max-width:1320px;width:100%;margin:0 auto;padding:30px 0 28px}
+.hero-body>*{width:min(660px,100%);text-align:center}
+.hero-body .hsearch,.hero-body .cta,.hero-body .hero-tag{margin-inline:0}
+.hero-body h1{font-size:clamp(2.4rem,6.5vw,4.6rem);margin:0 0 10px;font-weight:800;color:var(--text);text-shadow:var(--hero-shadow);letter-spacing:.5px}
+.hero-body .sub{color:var(--brand);font-size:clamp(1.05rem,2.4vw,1.55rem);font-weight:800;margin:0 0 14px;text-shadow:var(--hero-shadow)}
+.hero-tag{display:flex;justify-content:center;align-items:center;gap:14px;color:var(--text);font-weight:700;margin-bottom:24px}
+.hero-tag::before,.hero-tag::after{content:"";width:60px;height:2px;background:var(--brand);opacity:.8}
+.hero-tag i{color:var(--brand);font-style:normal}
+.hsearch{position:relative}
+.hsearch input{border-radius:999px;background:var(--panel);color:var(--text);border:1px solid var(--line);padding:14px 22px 14px 56px;font-size:1rem;box-shadow:var(--shadow)}
+.hsearch input::placeholder{color:var(--muted)}
+.hsearch .go{position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:var(--brand);cursor:pointer}
+.hsearch .go svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.sres{position:absolute;top:calc(100% + 8px);inset-inline:0;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;text-align:start;z-index:5}
+.sres a{display:flex;justify-content:space-between;gap:10px;padding:11px 18px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--line);font-weight:600}
+.sres a:last-child{border:0}.sres a:hover,.sres a:focus-visible{background:var(--panel2)}
+.sres small{color:var(--muted)}
+.cta{display:flex;gap:16px;margin-top:26px;flex-wrap:wrap;justify-content:center}
+.cta .big-btn{min-width:230px;padding:14px 30px;border-radius:18px;border:2px solid var(--brand);background:var(--brand);color:var(--brand-ink);font:800 1.4rem var(--font);cursor:pointer;text-decoration:none;box-shadow:var(--shadow);transition:transform .15s,filter .2s}
+.cta .big-btn.alt{background:var(--panel);color:var(--brand)}
+.cta .big-btn:hover{transform:translateY(-3px);filter:brightness(1.08)}
+.intl-link{display:inline-block;margin-top:16px;color:var(--text);font-weight:700;text-decoration:none;border-bottom:2px solid var(--brand);padding-bottom:2px}
+.intl-link:hover{color:var(--brand)}
+.strip{max-width:1320px;width:100%;margin:0 auto 26px;display:grid;grid-template-columns:repeat(5,1fr);background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--glass-line);border-radius:26px;overflow:hidden;box-shadow:var(--shadow)}
+.strip a{display:grid;grid-template-columns:1fr auto;grid-template-areas:"ic arr" "t t" "d d";align-items:center;gap:2px 8px;padding:18px 22px;color:var(--text);text-decoration:none;border-inline-start:1px solid var(--glass-line);transition:background .2s}
+.strip a:first-child{border-inline-start:0}
+.strip a:hover{background:color-mix(in srgb,var(--brand) 12%,transparent)}
+.strip .ic{grid-area:ic;color:var(--brand)}
+.strip .ic svg{width:42px;height:42px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.strip b{grid-area:t;font-size:1.05rem;margin-top:4px}
+.strip small{grid-area:d;color:var(--muted);font-size:.82rem}
+.strip .arr{grid-area:arr;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--brand);display:flex;align-items:center;justify-content:center}
+.strip .arr svg{width:16px;height:16px;stroke:var(--brand);fill:none;stroke-width:2.2}
+
+/* ---- عن المركز ---- */
+.dg-about{position:relative;color:var(--text);padding:46px 20px 30px;overflow:hidden}
+.dg-about .wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:34px;align-items:center;position:relative}
+.flagwave{position:absolute;top:-46px;inset-inline-start:0;width:min(40%,460px);height:auto;opacity:.9;pointer-events:none}
+.about-txt{position:relative}
+.about-txt .eyebrow-l{color:var(--brand);font-weight:800;margin:0 0 4px;font-size:1.05rem}
+.about-txt h2,.sec>h2{font-size:clamp(1.7rem,3vw,2.3rem);margin:0 0 10px;color:var(--text);display:flex;align-items:center;gap:14px}
+.about-txt h2::after,.sec>h2::after{content:"";width:90px;height:4px;background:linear-gradient(90deg,var(--brand),var(--info));border-radius:2px}
+.about-txt p.lead{color:var(--muted);font-size:1.08rem;max-width:620px;margin-bottom:14px}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checks li{display:flex;align-items:center;gap:10px;font-weight:600}
+.checks li::before{content:"✓";flex:none;width:24px;height:24px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.nums{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.num-card{--c:var(--brand);background:linear-gradient(165deg,color-mix(in srgb,var(--c) 16%,var(--panel)),var(--panel));border:1px solid var(--line);border-top:5px solid var(--c);border-radius:18px;padding:22px 18px;text-align:center;box-shadow:var(--shadow)}
+.num-card:nth-child(2){--c:var(--info)}.num-card:nth-child(3){--c:var(--ok)}.num-card:nth-child(4){--c:var(--violet)}
+.num-card b{display:block;font-size:2.4rem;color:var(--c);line-height:1.2}.num-card span{color:var(--muted);font-weight:600}
+.feats{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.feat{display:flex;align-items:center;gap:14px;padding:22px 24px;border-inline-start:1px solid var(--line)}
+.feat:first-child{border-inline-start:0}
+.feat .fi{width:50px;height:50px;border-radius:14px;background:var(--brand);color:var(--brand-ink);display:flex;align-items:center;justify-content:center;flex:none}
+.feat:nth-child(2) .fi{background:var(--info);color:#fff}.feat:nth-child(3) .fi{background:var(--ok);color:#fff}.feat:nth-child(4) .fi{background:var(--violet);color:#fff}
+.feat .fi svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.feat b{display:block;color:var(--text)}.feat small{color:var(--muted)}
+.about-steps{grid-column:1/-1}
+
+/* ---- أقسام باقي الصفحة ---- */
+.sec{max-width:1320px;margin:0 auto;padding:54px 20px 10px;scroll-margin-top:12px}
+.sec>.lead{color:var(--muted);max-width:760px;font-size:1.05rem;margin-bottom:22px}
+.steps{counter-reset:s}
+.step{counter-increment:s}
+.step h4::before{content:counter(s);display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--brand);color:var(--brand-ink);margin-inline-end:10px;font-weight:800}
+details{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden}
+details[open]{border-color:var(--brand)}
+summary{cursor:pointer;padding:16px 20px;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::after{content:"+";color:var(--brand);font-size:1.4rem;line-height:1}
+details[open] summary::after{content:"−"}
+details p{padding:0 20px 16px;margin:0;color:var(--muted)}
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;align-items:start}
+.contact{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;align-items:start}
+
+/* ---- الخدمات الحكومية (ملوّنة) ---- */
+.svc{--c:var(--brand);background:linear-gradient(165deg,color-mix(in srgb,var(--c) 15%,var(--panel)) 0%,var(--panel) 65%);border-top:5px solid var(--c);box-shadow:var(--shadow);transition:transform .2s}
+.svc:hover{transform:translateY(-4px)}
+.svc h3{display:flex;align-items:center;gap:10px;color:var(--text)}
+.svc .si{width:40px;height:40px;border-radius:12px;background:var(--c);color:#0b1a45;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.svc .si svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.svc a{display:block;color:var(--text);text-decoration:none;padding:9px 12px;margin:4px -12px;border-radius:10px;transition:.2s}
+.svc a:hover,.svc a:focus-visible{background:color-mix(in srgb,var(--c) 20%,transparent);color:var(--text);padding-inline-start:18px}
+.svc a::after{content:" ←";color:var(--c);font-weight:800}
+
+/* ---- التذييل ---- */
+.dg-foot{margin-top:70px;background:var(--bg2);color:var(--text);border-top:3px solid var(--brand)}
+.dg-foot .in{max-width:1320px;margin:0 auto;padding:22px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.dg-foot .tagline{color:var(--brand);font-size:1.4rem;font-weight:800}
+.dg-foot .flinks{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:.9rem}
+.dg-foot .flinks img{border-radius:12px}
+.dg-foot .flinks button{background:none;border:0;color:var(--muted);font:inherit;cursor:pointer;padding:0}
+.dg-foot .flinks button:hover{color:var(--brand);text-decoration:underline}
+.social{display:flex;gap:10px}
+.social a{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text);text-decoration:none;font-weight:800;font-size:.95rem}
+.social a:hover{border-color:var(--brand);color:var(--brand)}
+.id-modal.wide{max-width:600px}
+.id-modal .body p{margin:.5em 0;color:var(--muted)}
+.id-modal ul{padding-inline-start:20px;color:var(--muted)}
+.hint{min-height:1.4em;font-size:.88rem;margin-top:4px}
+.stack-btn{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+
+/* ---- هيرو المستخدم بعد الدخول ---- */
+.user-hero{min-height:980px;padding-top:16px;background-position:10% top,center}
+.glass{background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--glass-line);border-radius:22px;padding:18px 20px;color:var(--text);box-shadow:var(--shadow)}
+.uh{max-width:1180px;width:100%;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr;gap:24px;align-items:start;padding:8px 0 26px;flex:0 0 auto}
+.idpanel{display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center}
+.uh-main{min-width:0}
+.uh .eyebrow{color:var(--brand);font-weight:800;margin:0}
+.uh h1{font-size:clamp(1.8rem,3.6vw,2.6rem);margin:0 0 2px;color:var(--text);text-shadow:var(--hero-shadow)}
+.uh .sub{color:var(--text);margin:0 0 12px;font-size:1rem}
+.idtop{display:flex;align-items:center;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--glass-line);margin-bottom:10px}
+.idtop b{display:block;font-size:1.35rem}.idtop small{color:var(--muted)}
+.idgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 16px;margin:0}
+.idgrid dt{color:var(--muted);font-size:.82rem}.idgrid dd{margin:0;font-weight:700}
+.uh-qr{text-align:center}
+.uh-qr .qrwrap{background:#fff;padding:10px;border-radius:14px;line-height:0;display:inline-block;margin-bottom:10px;border:1px solid var(--line)}
+.uh-qr .qrwrap svg{width:128px;height:128px}
+.uh-qr .qr-ttl{font-size:11px}
+.uh-qr b{display:block;font-size:1rem}.uh-qr small{display:block;color:var(--muted);margin-bottom:6px}
+.strip.four{grid-template-columns:repeat(4,1fr)}
+.sitem{padding:18px 22px;color:var(--text);border-inline-start:1px solid var(--glass-line)}
+.sitem:first-child{border-inline-start:0}
+.sitem small{display:block;color:var(--muted)}.sitem b{font-size:1.7rem;color:var(--brand);line-height:1.3}
+.uh-tiles{max-width:1180px;width:100%;margin:auto auto 20px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding-top:14px}
+.tile{--c:var(--brand);background:linear-gradient(160deg,color-mix(in srgb,var(--c) 24%,var(--panel)) 0%,var(--panel) 100%);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:14px;padding:10px 12px;color:var(--text);backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.tile .th{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.tile .ti{width:28px;height:28px;border-radius:9px;background:var(--c);color:#0b1a45;display:flex;align-items:center;justify-content:center;flex:none}
+.tile .ti svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tile b{font-size:.88rem;line-height:1.3}
+.tile a{display:block;color:var(--text);opacity:.85;text-decoration:none;font-size:.76rem;padding:2px 0;line-height:1.45}
+.tile a::before{content:"‹ ";color:var(--c);font-weight:800}
+.tile a:hover,.tile a:focus-visible{opacity:1;text-decoration:underline}
+.tsearch{display:flex;align-items:center;--c:var(--brand)}
+.tsearch input{background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font-size:.85rem}
+.tsearch input::placeholder{color:var(--muted)}
+
+/* ---- لوحة التحكم ---- */
+.act{list-style:none;margin:0;padding:0}
+.act li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+.act li:last-child{border:0}.act b{color:var(--text)}
+
+/* ================= شاشات الكمبيوتر ================= */
+@media(min-width:1001px){
+  .dg-hero{padding:22px 40px 0}
+  .dg-about,.sec{padding-inline:40px}
+  .sec,.dg-foot .in{max-width:1400px}
+  .dg-foot .in{padding-inline:40px}
+  .dg-hero .hero-body{padding-bottom:60px}
+  #svcGrid{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:1500px){
+  .dg-nav,.hero-body,.strip,.dg-about .wrap{max-width:1440px}
+  .sec,.dg-foot .in{max-width:1520px}
+  .hero-body>*{width:min(720px,100%)}
+  .hero-body h1{font-size:5rem}
+}
+
+/* ================= شاشات أصغر ================= */
+@media(max-width:900px){.uh{grid-template-columns:1fr}.uh-space{display:none}.idpanel{grid-template-columns:1fr}.uh-main{text-align:center}.idtop{justify-content:center}.strip.four{grid-template-columns:1fr 1fr}.sitem{border-top:1px solid var(--glass-line)}.uh-tiles{grid-template-columns:repeat(2,1fr)}.user-hero{min-height:0}}
+@media(max-width:480px){.uh-tiles{grid-template-columns:1fr}}
+@media(max-width:1000px){
+  .dg-hero{min-height:0;padding:14px 16px 0}
+  .dg-about,.sec{padding-inline:16px}
+  #svcGrid{grid-template-columns:1fr 1fr}
+  .hero-body{align-items:center}
+  .dg-nav{border-radius:24px;flex-wrap:wrap}
+  .dg-burger{display:inline-flex}
+  .dg-links{display:none;width:100%;flex-direction:column;align-items:stretch;order:5}
+  .dg-links.open{display:flex}
+  .strip{grid-template-columns:repeat(2,1fr)}
+  .strip a{border-top:1px solid var(--glass-line)}
+  .dg-about .wrap{grid-template-columns:1fr}
+  .feats{grid-template-columns:1fr 1fr}.feat:nth-child(3){border-inline-start:0}
+  .contact,.faq{grid-template-columns:1fr}
+  .flagwave{width:60%;opacity:.35}
+}
+@media(max-width:560px){
+  .dg-hero{padding:12px 12px 0}
+  .dg-nav{padding:8px 12px;gap:8px}
+  .dg-brand img{height:42px;width:42px}.dg-brand b{font-size:1rem}.dg-brand small{display:none}
+  .dg-tools{margin-inline-start:auto}
+  .hero-body{padding:22px 0 18px}
+  .hero-body h1{font-size:2.3rem}
+  .hero-tag::before,.hero-tag::after{width:28px}
+  .cta{margin-top:18px;gap:10px}.cta .big-btn{min-width:0;width:100%;font-size:1.2rem;padding:12px 20px}
+  .strip{grid-template-columns:1fr 1fr;border-radius:20px;margin-bottom:16px}
+  .strip a{padding:12px 14px;border-inline-start:0;border-top:1px solid var(--glass-line)}
+  .strip a:nth-child(-n+2){border-top:0}
+  .strip a:nth-child(odd){border-inline-end:1px solid var(--glass-line)}
+  .strip a:last-child{grid-column:1/-1;border-inline-end:0}
+  .strip .ic svg{width:30px;height:30px}.strip .arr{width:28px;height:28px}.strip b{font-size:.95rem}.strip small{display:none}
+  .dg-about{padding:30px 14px 10px}.flagwave{display:none}
+  .sec{padding:36px 14px 6px}
+  .nums{gap:10px}.num-card{padding:14px 10px}.num-card b{font-size:1.9rem}
+  .feats{grid-template-columns:1fr 1fr}.feat{padding:14px;gap:10px;border-inline-start:0;border-top:1px solid var(--line)}
+  .feat:nth-child(-n+2){border-top:0}.feat:nth-child(odd){border-inline-end:1px solid var(--line)}
+  .feat .fi{width:40px;height:40px}.feat .fi svg{width:20px;height:20px}
+  .contact .kv{flex-wrap:wrap}.contact .ltr{display:block;overflow-wrap:anywhere;text-align:start}
+  .dg-foot .in{flex-direction:column;text-align:center;padding:20px 14px}
+  .dg-foot .flinks{justify-content:center}
+}
+@media(max-width:380px){.nums{grid-template-columns:1fr}.feats{grid-template-columns:1fr}.feat:nth-child(odd){border-inline-end:0}.feat:nth-child(2){border-top:1px solid var(--line)}}
+</style>
+</head>
+<body class="home-page">
+
+<!-- ================= الصفحة الرئيسية للزائر ================= -->
+<div id="landing" hidden>
+  <section class="dg-hero" id="home" aria-label="Digitals EGYPT">
+    <nav class="dg-nav" aria-label="القائمة الرئيسية">
+      <a class="dg-brand" href="#home"><img src="assets/img/logo-digitals.svg" alt="Digitals EGYPT"><span><b>Digitals EGYPT</b><small>المركز الوطني للتحكم</small></span></a>
+      <button class="icon-btn dg-burger" id="burger" type="button" aria-label="القائمة" aria-expanded="false" aria-controls="dgLinks"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <ul class="dg-links" id="dgLinks">
+        <li><a href="#home" class="on" data-sec="home">الرئيسية</a></li>
+        <li><a href="#about" data-sec="about">عن المركز</a></li>
+        <li><a href="#services" data-sec="services">الخدمات</a></li>
+        <li><a href="#faq" data-sec="faq">الاستفسارات</a></li>
+        <li><a href="#contact" data-sec="contact">اتصل بنا</a></li>
+      </ul>
+      <div class="dg-tools"><button class="icon-btn" id="langBtn" type="button" aria-label="اللغة">English ⌄</button><span class="sep"></span><span id="toolSlot" style="display:flex;gap:6px"></span></div>
+    </nav>
+
+    <div class="hero-body">
+      <h1>Digitals EGYPT</h1>
+      <p class="sub">منصة ذكية موحدة لإدارة ومتابعة الخدمات الحكومية</p>
+      <div class="hero-tag"><span>أمان</span><i>•</i><span>سرعة</span><i>•</i><span>كفاءة</span></div>
+      <div class="hsearch">
+        <label for="hs" class="sr-only">ابحث عن خدمة</label>
+        <input id="hs" type="search" placeholder="ابحث عن خدمة ..." autocomplete="off" aria-controls="sres">
+        <button class="go" type="button" id="hsGo" aria-label="بحث"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg></button>
+        <div class="sres" id="sres" role="listbox" hidden></div>
+      </div>
+      <div class="cta">
+        <button class="big-btn" type="button" id="openLogin">تسجيل الدخول</button>
+        <a class="big-btn alt" href="register.html">انشاء حساب</a>
+      </div>
+      <a class="intl-link" href="uni-international.html"> طالب وافد من خارج مصر؟ قدّم على الجامعات المصرية واستعلم عن طلبك ←</a>
+    </div>
+
+    <div class="strip" id="strip"></div>
+  </section>
+
+  <section class="dg-about" id="about" aria-labelledby="aboutT">
+    <svg class="flagwave" viewBox="0 0 520 150" aria-hidden="true" preserveAspectRatio="xMinYMin meet">
+      <path d="M0 0H520V34C430 52 400 14 320 26S130 62 0 18z" fill="#ce1126"/>
+      <path d="M0 18C130 62 240 38 320 26S430 52 520 34V62C430 80 400 42 320 54S130 92 0 48z" fill="#fff" stroke="#d3dcf0"/>
+      <path d="M0 48C130 92 240 68 320 54S430 80 520 62V92C430 110 400 72 320 84S130 122 0 78z" fill="#111827"/>
+    </svg>
+    <div class="wrap">
+      <div class="about-txt">
+        <p class="eyebrow-l">خدماتنا .. بين يديك</p>
+        <h2 id="aboutT">عن المركز</h2>
+        <p class="lead">المركز الوطني للتحكم يقدّم منصة Digitals EGYPT: هوية رقمية واحدة مرتبطة بالرقم القومي تجمع خدمات الوزارات والجهات الحكومية في مكان واحد. اطّلع على وثائقك، وسدّد مستحقاتك، واطبع شهاداتك، وتابع طلباتك بطريقة سهلة وآمنة توفّر وقتك وجهدك.</p>
+        <ul class="checks">
+          <li>هوية رقمية واحدة مرتبطة بالرقم القومي</li>
+          <li>سداد إلكتروني للمخالفات والرسوم والفواتير</li>
+          <li>وثائق قابلة للطباعة برمز QR للتحقق</li>
+          <li>سجل نشاط يتتبع عملياتك</li>
+        </ul>
+      </div>
+      <div class="nums" id="nums"></div>
+      <div class="feats">
+        <div class="feat"><span class="fi"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span><span><b>خدمات متطورة</b><small>لمستقبل أفضل</small></span></div>
+        <div class="feat"><span class="fi"><svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg></span><span><b>دعم فني</b><small>على مدار الساعة</small></span></div>
+        <div class="feat"><span class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg></span><span><b>إنجاز أسرع</b><small>لخدماتك</small></span></div>
+        <div class="feat"><span class="fi"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span><b>أمان عالي</b><small>لبياناتك</small></span></div>
+      </div>
+      <div class="grid steps about-steps" style="--min:260px">
+        <div class="box step"><h4>أنشئ حسابك</h4><p class="muted">سجّل باسمك ورقمك القومي المكوّن من 14 رقماً، ويُستخرج منه تاريخ الميلاد والمحافظة والنوع تلقائياً.</p></div>
+        <div class="box step"><h4>فعّل ملفك الرقمي</h4><p class="muted">أضف بياناتك الأكاديمية لتظهر شهاداتك الجامعية، وتتولد بياناتك الحكومية مترابطة بين كل الوزارات.</p></div>
+        <div class="box step"><h4>استخدم الخدمات</h4><p class="muted">ادفع المخالفات والرسوم والفواتير، واحجز مواعيدك الطبية، واطبع وثائقك برمز QR للتحقق.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="services" aria-labelledby="svT">
+    <h2 id="svT">الخدمات الحكومية</h2>
+    <p class="lead">جميع الوزارات والقطاعات في مكان واحد. سجّل الدخول للوصول إلى أي خدمة.</p>
+    <div class="grid" id="svcGrid" style="--min:300px"></div>
+  </section>
+
+  <section class="sec" id="faq" aria-labelledby="faqT">
+    <h2 id="faqT">الاستفسارات</h2>
+    <p class="lead">إجابات سريعة عن أكثر الأسئلة شيوعاً.</p>
+    <div class="faq">
+      <details><summary>ما هي منصة Digitals EGYPT؟</summary><p>منصة موحدة من المركز الوطني للتحكم لإدارة ومتابعة الخدمات الحكومية، تربط خدمات الداخلية والتعليم والصحة والمال والعدل والتموين والمرافق بهوية رقمية واحدة.</p></details>
+      <details><summary>كيف أسجّل في المنصة؟</summary><p>اضغط «انشاء حساب» واكتب اسمك الثلاثي على الأقل ورقمك القومي (14 رقماً) ورقم موبايلك. يمكنك إضافة بياناتك الأكاديمية اختيارياً.</p></details>
+      <details><summary>ما هو رمز التحقق؟</summary><p>عند كل تسجيل دخول يُرسل إلى موبايلك رمز من 6 أرقام صالح 5 دقائق، ولا يمكن الدخول بدونه نهائياً. بعد 3 محاولات خاطئة يُلغى الرمز، وبعد تكرار الأخطاء يُوقف الدخول مؤقتاً.</p></details>
+      <details><summary>هل بياناتي حقيقية وآمنة؟</summary><p> الحكومية المعروضة مولَّدة  من رقمك القومي.</p></details>
+      <details><summary>هل الوثائق المستخرجة رسمية؟</summary><p>.   نعم ويعتمد بها داخل جمهوريه مصر العربيةرسمياً.</p></details>
+      <details><summary>كيف تعمل المدفوعات؟</summary><p>تُخصم المخالفات والرسوم والفواتير من الحساب الجاري التجريبي في ملفك، وتظهر في سجل النشاط والمحفظة.</p></details>
+      <details><summary>كيف أحذف بياناتي؟</summary><p>من لوحة التحكم اضغط «حذف ملفي الرقمي» لإزالة بياناتك نهائياً من هذا الجهاز.</p></details>
+    </div>
+  </section>
+
+  <section class="sec" id="contact" aria-labelledby="ctT">
+    <h2 id="ctT">اتصل بنا</h2>
+    <p class="lead">نسعد بتواصلك معنا    </p>
+    <div class="contact">
+      <div class="box"><div class="kv"><span>البريد الإلكتروني</span><b class="ltr">support@digitalsegypt.example</b></div><div class="kv"><span>ساعات العمل</span><b>24 ساعة / 7 أيام</b></div><div class="kv"><span>المقر</span><b>القاهرة - جمهورية مصر العربية</b></div></div>
+      <form class="box" id="contactForm" novalidate>
+        <label for="cn">الاسم</label><input id="cn" autocomplete="name">
+        <label for="cm">رسالتك</label><textarea id="cm" rows="4" style="resize:vertical"></textarea>
+        <div class="ferr" id="cErr" role="alert"></div>
+        <button class="button" type="submit" style="margin-top:10px">إرسال</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="dg-foot">
+    <div class="in">
+      <div class="flinks"><img src="assets/img/logo-digitals.svg" alt="Digitals EGYPT" height="44" width="44"><button type="button" data-info="privacy">سياسة الخصوصية</button><span aria-hidden="true">|</span><button type="button" data-info="terms">شروط الاستخدام</button><span aria-hidden="true">|</span><button type="button" data-info="sitemap">خريطة الموقع</button></div>
+      <div class="tagline">هويتك الرقمية المتكاملة</div>
+      <div class="social" aria-label="وسائل التواصل"><a href="#" data-soc aria-label="فيسبوك">f</a><a href="#" data-soc aria-label="إكس">X</a><a href="#" data-soc aria-label="يوتيوب">▶</a><a href="#" data-soc aria-label="لينكدإن">in</a><a href="#" data-soc aria-label="إنستجرام">◎</a></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ================= لوحة التحكم بعد الدخول ================= -->
+<section class="dg-hero user-hero" id="userHero" hidden aria-label="هويتك الرقمية">
+  <div class="uh">
+    <div class="uh-main">
+      <p class="eyebrow">Digitals EGYPT</p>
+      <h1 id="uhHello"></h1>
+      <p class="sub">هويتك الرقمية المتكاملة وخدماتك الحكومية في مكان واحد</p>
+      <div class="glass idpanel">
+        <div>
+          <div class="idtop"><div class="avatar" id="avatar" aria-hidden="true"></div><div><b id="d-name"></b><small>الرقم القومي: <span class="mono" id="d-id"></span></small></div></div>
+          <dl class="idgrid" id="idgrid"></dl>
+        </div>
+        <div class="uh-qr">
+          <div class="qrwrap" id="idQr"></div>
+          <b>رمز الهوية الرقمي</b><small>يتجدد كل ساعة</small>
+          <a class="button sm" href="wallet.html">المحفظة</a>
+        </div>
+      </div>
+    </div>
+    <div class="uh-space" aria-hidden="true"></div>
+  </div>
+  <nav class="uh-tiles" id="tiles" aria-label="الوزارات والخدمات"></nav>
+  <div class="strip four" id="stats"></div>
+</section>
+<main class="page" id="main" hidden>
+  <div class="split even" style="margin-top:6px">
+    <div class="box"><h3> آخر النشاطات</h3><ul class="act" id="activity"></ul></div>
+    <div class="box"><h3> إدارة البيانات</h3>
+      <p class="muted">بياناتك محفوظة على هذا الجهاز فقط. يمكنك حذف ملفك الرقمي بالكامل في أي وقت.</p>
+      <div class="btn-row"><button class="button danger sm" id="wipeBtn" type="button">حذف ملفي الرقمي</button></div>
+    </div>
+  </div>
+</main>
+
+<!-- ================= النوافذ ================= -->
+<div class="id-overlay" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="lmT">
+  <div class="id-modal">
+    <h2 id="lmT">تسجيل الدخول</h2><p class="note" id="lmNote">النظام المركزي الموحد للدولة</p>
+    <form id="loginForm" novalidate>
+      <label for="nameInput">الاسم (ثلاثي على الأقل)</label>
+      <input id="nameInput" type="text" autocomplete="name" placeholder="كما هو مسجل في ملفك">
+      <label for="idInput">الرقم القومي (14 رقم)</label>
+      <input id="idInput" type="text" inputmode="numeric" maxlength="14" autocomplete="off" placeholder="29XXXXXXXXXXXX" dir="ltr" style="text-align:right">
+      <div class="hint" id="idHint" aria-live="polite"></div>
+      <div id="phoneWrap" hidden><label for="phoneInput">رقم الموبايل (لربطه بالحساب)</label><input id="phoneInput" type="tel" inputmode="numeric" maxlength="20" placeholder="01XXXXXXXXX" dir="ltr" style="text-align:right" autocomplete="tel"></div>
+      <div class="ferr" id="loginErr" role="alert"></div>
+      <div class="stack-btn">
+        <button class="button block" type="submit" id="loginBtn">متابعة وإرسال رمز التحقق</button>
+        <a class="button outline block" href="register.html">تسجيل لأول مرة</a>
+        <button class="button ghost block" type="button" id="demoBtn">تجربة سريعة بحساب تجريبي</button>
+        <button class="button ghost block" type="button" data-close>إلغاء</button>
+      </div>
+    </form>
+    <form id="otpForm" novalidate hidden>
+      <p class="note" id="otpMsg"></p>
+      <label for="otpInput">رمز التحقق (6 أرقام)</label>
+      <input id="otpInput" class="otp-in" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••">
+      <div class="hint muted" id="otpTimer" aria-live="off"></div>
+      <div class="ferr" id="otpErr" role="alert"></div>
+      <div class="stack-btn">
+        <button class="button block" type="submit">تأكيد الرمز ودخول</button>
+        <button class="button outline block" type="button" id="resendBtn" disabled>إعادة إرسال الرمز</button>
+        <button class="button ghost block" type="button" id="otpBack">رجوع</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="id-overlay" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="imT">
+  <div class="id-modal wide"><h2 id="imT"></h2><div class="body" id="imB"></div><div class="row"><button class="button" type="button" data-close>إغلاق</button></div></div>
+</div>
+
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const $ = id => document.getElementById(id), e = ID.esc;
+  if (u) initDash(u, D); else initLanding();
+
+  /* ===================== الزائر ===================== */
+  function initLanding() {
+    $('landing').hidden = false;
+    $('toolSlot').innerHTML = ID.tools(); ID.bindTools();
+    const S = ID.SERVICES; let next = null, last = null;
+    const ico = p => '<svg viewBox="0 0 24 24" aria-hidden="true">' + p + '</svg>', arr = '<span class="arr"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></span>';
+
+    /* نوافذ */
+    const open = (m, focus) => { last = document.activeElement; m.classList.add('open'); const f = focus ? $(focus) : m.querySelector('input,button'); f && f.focus(); };
+    const close = m => { m.classList.remove('open'); last && last.focus && last.focus(); };
+    document.querySelectorAll('.id-overlay').forEach(m => { m.addEventListener('mousedown', ev => { if (ev.target === m) close(m); }); m.querySelectorAll('[data-close]').forEach(b => b.onclick = () => close(m)); });
+    document.addEventListener('keydown', ev => { if (ev.key === 'Escape') document.querySelectorAll('.id-overlay.open').forEach(close); });
+    const info = (t, h) => { $('imT').textContent = t; $('imB').innerHTML = h; open($('infoModal')); };
+    const openLogin = (note, to) => { next = to || null; $('lmNote').textContent = note || 'النظام المركزي الموحد للدولة'; $('loginErr').textContent = ''; step(1); open($('loginModal'), 'nameInput'); };
+    $('openLogin').onclick = () => openLogin();
+
+    /* شريط الخدمات السريعة */
+    const Q = [
+      ['متابعة الطلبات', 'معرفة حالة طلبك', 'wallet.html#act', '<path d="M9 4h6v3H9z"/><path d="M7 5H5v16h14V5h-2"/><circle cx="11" cy="13" r="3"/><path d="M13.2 15.2L16 18"/>'],
+      ['المرور', 'الاستعلام عن المخالفات', 'interior.html', '<path d="M5 16l1.6-5.4A2 2 0 0 1 8.5 9h7a2 2 0 0 1 1.9 1.6L19 16"/><rect x="3" y="16" width="18" height="4" rx="1.5"/><path d="M7 18h.01M17 18h.01"/>'],
+      ['الجوازات', 'استخراج ومتابعة الطلبات', 'passports.html', '<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M9 17h6"/>'],
+      ['الاستفسارات', 'إجابات لأكثر الأسئلة شيوعاً', '#faq', '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/>'],
+      ['الطوارئ والبلاغات', 'قدم بلاغك ومتابعته', 'health.html#emergency', '<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>']
+    ];
+    $('strip').innerHTML = Q.map(q => '<a href="' + q[2] + '"' + (q[2][0] === '#' ? '' : ' class="gate"') + '><span class="ic">' + ico(q[3]) + '</span>' + arr + '<b>' + q[0] + '</b><small>' + q[1] + '</small></a>').join('');
+
+    /* أرقام وخدمات */
+    const total = S.reduce((n, s) => n + s.l.length, 0);
+    $('nums').innerHTML = [[S.length, 'قطاعاً حكومياً'], [total, 'خدمة إلكترونية'], [1, 'هوية رقمية موحدة'], ['24/7', 'إتاحة الخدمات']].map(n => '<div class="num-card"><b>' + n[0] + '</b><span>' + n[1] + '</span></div>').join('');
+    $('svcGrid').innerHTML = S.map(s => '<div class="box svc' + (s.f ? ' featured' : '') + '" style="--c:' + s.c + '"><h3><span class="si" aria-hidden="true">' + ID.icon(s.ic) + '</span>' + s.t + '</h3>' + s.l.map(x => '<a class="gate" href="' + x[0] + '">' + x[1] + '</a>').join('') + '</div>').join('');
+
+    /* حراسة الروابط: تتطلب تسجيل الدخول */
+    document.addEventListener('click', ev => { const a = ev.target.closest('a.gate'); if (!a) return; ev.preventDefault(); openLogin('سجّل الدخول للوصول إلى هذه الخدمة.', a.getAttribute('href')); });
+
+    /* البحث */
+    const idx = []; S.forEach(s => s.l.forEach(x => idx.push({ href: x[0], label: x[1], ministry: s.t, key: ID.normName(x[1] + ' ' + s.t) })));
+    const hs = $('hs'), res = $('sres');
+    function search() {
+      const q = ID.normName(hs.value); if (!q) { res.hidden = true; return []; }
+      const m = idx.filter(x => x.key.indexOf(q) > -1).slice(0, 6);
+      res.innerHTML = m.length ? m.map(x => '<a class="gate" role="option" href="' + x.href + '"><span>' + e(x.label) + '</span><small>' + e(x.ministry) + '</small></a>').join('') : '<a href="#services" style="pointer-events:none">لا توجد نتائج مطابقة</a>';
+      res.hidden = false; return m;
+    }
+    hs.addEventListener('input', search);
+    hs.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); const m = search(); if (m[0]) openLogin('سجّل الدخول للوصول إلى هذه الخدمة.', m[0].href); } });
+    $('hsGo').onclick = () => { const m = search(); if (m[0]) openLogin('سجّل الدخول للوصول إلى هذه الخدمة.', m[0].href); };
+    document.addEventListener('click', ev => { if (!ev.target.closest('.hsearch')) res.hidden = true; });
+
+    /* قائمة التنقل + تتبع القسم الحالي */
+    const bg = $('burger'), links = $('dgLinks');
+    bg.onclick = () => { const o = links.classList.toggle('open'); bg.setAttribute('aria-expanded', String(o)); };
+    links.addEventListener('click', ev => { if (ev.target.closest('a')) { links.classList.remove('open'); bg.setAttribute('aria-expanded', 'false'); } });
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(en => en.forEach(x => { if (x.isIntersecting) links.querySelectorAll('a').forEach(a => a.classList.toggle('on', a.dataset.sec === x.target.id)); }), { rootMargin: '-35% 0px -55% 0px' });
+      ['home', 'about', 'services', 'faq', 'contact'].forEach(id => io.observe($(id)));
+    }
+    $('langBtn').onclick = () => ID.toast('النسخة الإنجليزية قيد الإعداد.');
+
+    /* روابط التذييل */
+    const INFO = {
+      terms: ['شروط الاستخدام', '<p>هذه المنصة نموذج تجريبي، والوثائق الصادرة عنها غير رسمية ولا يُعتد بها أمام أي جهة.</p><p>لا تُدخل بيانات شخصية حساسة حقيقية.</p>'],
+      sitemap: ['خريطة الموقع', '<ul>' + S.map(s => '<li><b>' + s.t + '</b>: ' + s.l.map(x => e(x[1])).join('، ') + '</li>').join('') + '</ul>']
+    };
+    document.querySelectorAll('[data-info]').forEach(b => b.onclick = () => info(INFO[b.dataset.info][0], INFO[b.dataset.info][1]));
+    document.querySelectorAll('[data-soc]').forEach(a => a.onclick = ev => { ev.preventDefault(); ID.toast('الرابط غير متاح في النسخة التجريبية.'); });
+
+    /* اتصل بنا */
+    $('contactForm').addEventListener('submit', ev => {
+      ev.preventDefault();
+      if (!ID.validName($('cn').value)) { $('cErr').textContent = 'اكتب اسمك ثلاثياً (حروف فقط).'; return; }
+      if ($('cm').value.trim().length < 5) { $('cErr').textContent = 'اكتب رسالتك (5 أحرف على الأقل).'; return; }
+      $('cErr').textContent = ''; ev.target.reset(); ID.toast('تم استلام رسالتك  ');
+    });
+
+    /* تسجيل الدخول */
+    const idI = $('idInput'), hint = $('idHint');
+    idI.addEventListener('input', function () {
+      const v = ID.toEn(idI.value).replace(/\D/g, ''); idI.value = v;
+      if (v.length < 14) { hint.textContent = v.length ? v.length + ' / 14' : ''; hint.className = 'hint muted'; return; }
+      const n = ID.parseNid(v); hint.className = 'hint ' + (n.ok ? 'ok' : 'bad'); hint.textContent = n.ok ? '✓ ' + n.gov + ' • ' + n.gender + ' • ' + n.age + ' سنة' : n.err;
+    });
+    const go = () => { if (next && next[0] !== '#') location.href = next; else location.reload(); };
+    const lf = $('loginForm'), of = $('otpForm'); let tick = null;
+    const step = n => { lf.hidden = n !== 1; of.hidden = n !== 2; $('lmT').textContent = n === 1 ? 'تسجيل الدخول' : 'رمز التحقق'; clearInterval(tick); if (n === 2) { $('otpInput').value = ''; $('otpErr').textContent = ''; tick = setInterval(timer, 1000); timer(); $('otpInput').focus(); } else $('nameInput').focus(); };
+    function timer() {
+      const i = ID.otpInfo(); if (!i) return; const now = Date.now(), left = Math.max(0, i.exp - now), rs = Math.max(0, Math.ceil((i.cooldown - (now - i.sentAt)) / 1000));
+      $('otpTimer').textContent = left ? 'ينتهي الرمز خلال ' + String(Math.floor(left / 60000)).padStart(2, '0') + ':' + String(Math.floor(left / 1000) % 60).padStart(2, '0') : 'انتهت صلاحية الرمز، اطلب رمزاً جديداً.';
+      $('resendBtn').disabled = rs > 0; $('resendBtn').textContent = rs > 0 ? 'إعادة الإرسال بعد ' + rs + ' ثانية' : 'إعادة إرسال الرمز';
+    }
+    const sent = r => { $('otpMsg').textContent = 'تم إرسال رمز تحقق من 6 أرقام إلى الموبايل ' + r.masked + '. لا يمكن الدخول بدونه.'; step(2); };
+    new MutationObserver(() => { if (!$('loginModal').classList.contains('open')) { clearInterval(tick); } }).observe($('loginModal'), { attributes: true, attributeFilter: ['class'] });
+    lf.addEventListener('submit', async ev => {
+      ev.preventDefault(); const name = $('nameInput').value, err = $('loginErr'), btn = $('loginBtn');
+      if (!ID.validName(name)) { err.textContent = 'اكتب اسمك ثلاثياً على الأقل (حروف فقط).'; $('nameInput').focus(); return; }
+      btn.disabled = true; const r = await ID.startLogin(name, idI.value, $('phoneInput').value); btn.disabled = false;
+      if (!r.ok) { err.textContent = r.err; if (r.needPhone) { $('phoneWrap').hidden = false; $('phoneInput').focus(); } else (r.notFound ? idI : $('nameInput')).focus(); return; }
+      err.textContent = ''; sent(r);
+    });
+    of.addEventListener('submit', async ev => {
+      ev.preventDefault(); const r = await ID.verifyOtp($('otpInput').value);
+      if (r.ok) { go(); return; }
+      $('otpErr').textContent = r.err; $('otpInput').value = '';
+      if (r.restart) { $('loginErr').textContent = r.err; step(1); } else $('otpInput').focus();
+    });
+    $('otpInput').addEventListener('input', function () { this.value = ID.toEn(this.value).replace(/\D/g, ''); });
+    $('resendBtn').onclick = async () => { const r = await ID.resendOtp(); if (!r.ok) { $('otpErr').textContent = r.err; return; } $('otpErr').textContent = ''; $('otpMsg').textContent = 'تم إرسال رمز جديد إلى ' + r.masked + '. الرمز السابق لم يعد صالحاً.'; timer(); $('otpInput').focus(); };
+    $('otpBack').onclick = () => step(1);
+    $('demoBtn').onclick = () => { const d = ID.demo(); $('nameInput').value = d.name; idI.value = d.nid; idI.dispatchEvent(new Event('input')); lf.requestSubmit(); };
+    if (location.hash === '#login') { history.replaceState(null, '', location.pathname); openLogin('تم التسجيل بنجاح. سجّل الدخول وسيصلك رمز التحقق على موبايلك.'); }
+  }
+
+  /* ===================== المستخدم المسجّل ===================== */
+  function initDash(u, D) {
+    $('userHero').hidden = false; $('main').hidden = false;
+    $('avatar').textContent = u.name.trim().charAt(0); $('uhHello').textContent = 'مرحباً، ' + u.first;
+    $('d-name').textContent = u.name; $('d-id').textContent = u.nid;
+    const rows = [['تاريخ الميلاد', ID.fmtDate(new Date(u.y, u.m - 1, u.d))], ['العمر', u.age + ' سنة'], ['المحافظة', u.gov], ['النوع', u.gender], ['رقم الموبايل', u.phone ? ID.maskPhone(u.phone) : '—']];
+    if (u.faculty) rows.push(['المؤهل', (u.degree || 'بكالوريوس') + ' - ' + u.faculty]);
+    $('idgrid').innerHTML = rows.map(r => '<div><dt>' + r[0] + '</dt><dd>' + e(r[1]) + '</dd></div>').join('');
+    ID.qr($('idQr'), 'DIGITALSEGYPT-DEMO|IDENTITY|' + ID.refCode(u.nid + 'identity'), 6);
+    const st = ID.state(), bal = D.balances(), tr = D.traffic();
+    const fines = tr.viol.filter(v => !st.paid[v.id]).reduce((s, v) => s + v.amount, 0);
+    $('stats').innerHTML =
+      '<div class="sitem"><small>إجمالي السيولة النقدية</small><b>' + ID.fmt(bal.total) + ' <small style="display:inline">جم</small></b></div>' +
+      '<div class="sitem"><small>مخالفات مرورية مستحقة</small><b>' + ID.fmt(fines) + ' <small style="display:inline">جم</small></b></div>' +
+      '<div class="sitem"><small>مواعيد طبية محجوزة</small><b>' + st.appointments.length + '</b></div>' +
+      '<div class="sitem"><small>العمليات المسجلة</small><b>' + st.activity.length + '</b></div>';
+    const tiles = $('tiles');
+    tiles.innerHTML = ID.SERVICES.map(sv => '<div class="tile" style="--c:' + sv.c + '"><div class="th"><span class="ti">' + ID.icon(sv.ic) + '</span><b>' + sv.t + '</b></div>' + sv.l.map(x => '<a href="' + x[0] + '">' + x[1] + '</a>').join('') + '</div>').join('') +
+      '<label class="tile tsearch"><span class="sr-only">ابحث عن خدمة</span><input id="search" type="search" placeholder=" ابحث عن خدمة..."></label>';
+    $('search').addEventListener('input', function () {
+      const q = ID.normName(this.value);
+      tiles.querySelectorAll('.tile:not(.tsearch)').forEach(el => { el.hidden = !!q && ID.normName(el.textContent).indexOf(q) < 0; });
+    });
+    const ul = $('activity');
+    ul.innerHTML = st.activity.length ? st.activity.slice(0, 6).map(a => '<li><span><b>' + e(a.title) + '</b> · ' + e(a.text) + '</span><small>' + ID.fmtDate(new Date(a.t)) + '</small></li>').join('') : '<li>لا توجد نشاطات بعد.</li>';
+    $('wipeBtn').onclick = () => ID.confirm('حذف الملف الرقمي', 'سيتم حذف بياناتك وسجل نشاطك نهائياً من هذا الجهاز. هل أنت متأكد؟', 'حذف نهائي', true).then(ok => { if (ok) { ID.wipeUser(); location.reload(); } });
+  }
+}, { public: true, custom: true });
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | منظومة الدعم والتموين</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.sup{border-bottom:5px solid #27ae60}
+.sup.gold{border-bottom-color:#f39c12}
+.list{background:#0003;border-radius:10px;padding:6px 14px;margin-top:12px}
+.count{background:#f39c12;color:#000;padding:2px 12px;border-radius:99px;font-weight:800}
+.qrbox{background:#fff;padding:10px;border-radius:10px;width:fit-content;margin:12px auto;text-align:center;line-height:0}
+.qrbox svg{width:110px;height:110px}
+.qrbox p{color:#000;font-size:.72rem;margin:4px 0 0;line-height:1.3}
+.items{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;text-align:center;font-size:.92rem}
+.items div{background:#ffffff0d;padding:12px;border-radius:8px}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › التموين والتجارة الداخلية</div>
+  <div class="page-head"><div><h1 style="color:#27ae60"> وزارة التموين والتجارة الداخلية</h1><p>مرحباً بالسيد/ <b class="hl" id="un"></b></p></div></div>
+
+  <div class="split even">
+    <section class="box sup" aria-labelledby="h1">
+      <h3 id="h1"> بطاقة التموين الذكية</h3>
+      <div class="kv"><span>رقم البطاقة</span><b class="mono" id="cn"></b></div>
+      <div class="kv"><span>عدد الأفراد المستفيدين</span><span class="count" id="fc"></span></div>
+      <div class="kv"><span>حالة البطاقة</span><span class="pill ok">نشطة (صرف كلي)</span></div>
+      <div class="qrbox"><div id="qr"></div><p>كود الصرف السريع</p></div>
+    </section>
+
+    <section class="box sup gold" aria-labelledby="h2">
+      <h3 id="h2"> أرصدة الدعم المتاحة</h3>
+      <div class="list">
+        <div class="kv"><span>رصيد السلع التموينية</span><b class="ok"><span id="cr"></span> جم</b></div>
+        <div class="kv"><span>فارق نقاط الخبز</span><b style="color:#f39c12"><span id="br"></span> نقطة</b></div>
+        <div class="kv"><span>آخر عملية صرف</span><small id="ld"></small></div>
+      </div>
+      <div id="pend"></div>
+      <div class="btn-row"><button class="button" id="addM" type="button">إضافة أفراد جدد</button></div>
+    </section>
+  </div>
+
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const $ = id => document.getElementById(id), s = D.supply(), F = D.family(), st = ID.state();
+  $('un').textContent = u.name; $('cn').textContent = s.card; $('cr').textContent = s.credit; $('br').textContent = s.bread; $('ld').textContent = ID.fmtDate(s.last);
+  $('mo').textContent = ID.NOW.toLocaleDateString('ar-EG', { month: 'long' });
+  ID.qr($('qr'), 'DIGITALSEGYPT-DEMO|SUPPLY|' + ID.refCode(u.nid + s.card));
+  function count() { $('fc').textContent = F.supplyCount + (st.members || 0); const p = st.memberReq || 0; $('pend').innerHTML = p ? '<p class="warn" style="margin-top:10px">طلبات إضافة أفراد قيد المراجعة: ' + p + '</p>' : ''; }
+  $('addM').onclick = () => ID.dialog({ title: 'إضافة فرد إلى البطاقة', note: 'يخضع الطلب للمراجعة قبل الإضافة.', fields: [{ id: 'n', label: 'اسم الفرد (ثلاثي)', test: ID.validName, msg: 'اكتب الاسم ثلاثياً (حروف فقط).' }, { id: 'i', label: 'الرقم القومي للفرد', inputmode: 'numeric', test: v => ID.parseNid(v).ok, msg: 'رقم قومي غير صحيح.' }, { id: 'rel', label: 'صلة القرابة', options: ['زوج/زوجة', 'ابن/ابنة', 'أب/أم', 'أخ/أخت'] }], ok: 'تقديم الطلب' }).then(v => {
+    if (!v) return; if (v.i === u.nid) return ID.toast('هذا هو رقمك القومي بالفعل.', true);
+    st.memberReq = (st.memberReq || 0) + 1; ID.log('طلب إضافة فرد', v.rel + ' إلى بطاقة التموين'); count(); ID.toast('تم إرسال الطلب للمراجعة');
+  });
+  count();
+});
+</script>
+</body>
+</html>

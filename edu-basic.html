@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | وزاره التربيه والتعليم المصريه   </title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.stage{display:block;width:100%;text-align:start;background:var(--panel);border:1px solid var(--line);border-inline-start:5px solid #4cc9f0;color:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;font-family:inherit;transition:.2s}
+.stage:hover{background:var(--panel2)}
+.stage[aria-pressed=true]{border-inline-start-color:var(--brand);background:#e9b44c18}
+.stage h4{margin:0 0 2px}.stage p{margin:0;color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › وزارة التربية والتعليم › الخدمات التعليمية</div>
+  <div class="page-head"><div><h1> بوابة التعليم قبل الجامعي</h1><p>السجل التعليمي للمواطن: <b class="hl" id="uName"></b></p></div><a class="button ghost sm" href="edu-exams.html">أرقام الجلوس والنتائج</a></div>
+  <div class="tabs" role="tablist" aria-label="أقسام التعليم">
+    <button role="tab" id="t-certs" aria-selected="true" aria-controls="p-certs"> شهاداتي</button>
+    <button role="tab" id="t-transfer" aria-selected="false" aria-controls="p-transfer"> التحويل بين المدارس</button>
+    <button role="tab" id="t-abroad" aria-selected="false" aria-controls="p-abroad"> العائدون من الخارج</button>
+    <button role="tab" id="t-svc" aria-selected="false" aria-controls="p-svc"> كل الخدمات</button>
+  </div>
+  <section id="p-certs" role="tabpanel">
+  <div class="split ratio">
+    <div><h3>المراحل الدراسية</h3><div id="stages"></div><p class="muted" style="font-size:.85rem">* اختر المرحلة لعرض الشهادات المتاحة</p></div>
+    <div class="box" aria-live="polite">
+      <h3> المستندات المتاحة</h3>
+      <p id="sel" class="muted">اختر مرحلة دراسية من القائمة.</p>
+      <div class="btn-row" id="actions" hidden>
+        <button class="button" type="button" data-doc="pass">استخراج بيان نجاح</button>
+        <button class="button green" type="button" data-doc="grades">استخراج بيان درجات</button>
+      </div>
+    </div>
+  </div>
+
+  <article id="cert" class="paper" style="margin-top:22px" hidden>
+    <div class="head"><img class="logo" src="assets/img/logo-digitals.svg" alt=""><h2>وزارة التربية والتعليم والتعليم الفني</h2><h3 id="c-title"></h3></div>
+    <p>تشهد الإدارة التعليمية بأن الطالب/ <span class="val" id="c-name"></span></p>
+    <p>المقيد برقم قومي: <span class="val" id="c-id"></span></p>
+    <p>قد اجتاز اختبارات: <span class="val" id="c-stage"></span> - دور أول <span id="c-year"></span></p>
+    <div class="table-wrap" id="c-tbl"></div>
+    <p id="c-res" style="font-weight:800;margin-top:14px"></p>
+    <div class="foot"><div class="qr" id="c-qr"></div><div class="seal">خاتم الجمهورية<br>الإدارة المركزية</div><div class="sig">رئيس الإدارة<br>__________</div></div>
+    <div class="btn-row no-print"><button class="button" type="button" onclick="window.print()">🖨️ طباعة / حفظ PDF</button><button class="button ghost" type="button" id="close">إغلاق</button></div>
+  </article>
+  </section>
+  <section id="p-transfer" role="tabpanel" hidden>
+    <div class="split even"><section class="box accent" style="--c:var(--info)"><h3> طلب تحويل من مدرسة إلى مدرسة</h3>
+      <p class="muted">يمكنك التحويل داخل نفس المحافظة أو إلى محافظة أخرى، بشرط توافر مقاعد بالمدرسة المطلوبة.</p>
+      <div class="kv"><span>الطالب</span><b id="trName"></b></div><div class="kv"><span>المدرسة الحالية</span><b id="trSchool"></b></div><div class="kv"><span>رسوم الطلب</span><b>50 جم</b></div>
+      <div class="btn-row"><button class="button" id="trBtn" type="button">تقديم طلب تحويل</button></div></section>
+    <section class="box"><h3>شروط وخطوات التحويل</h3><ol class="muted" style="line-height:2"><li>تقديم الطلب إلكترونياً وسداد الرسوم.</li><li>موافقة المدرسة الحالية على إخلاء الطرف.</li><li>موافقة المدرسة المحوَّل إليها (حسب الكثافة).</li><li>اعتماد الإدارة التعليمية وإصدار إخطار القبول.</li><li>استلام الإخطار من المدرسة الجديدة بالموعد المحجوز.</li></ol></section></div>
+    <h3 class="section-title">طلبات التحويل الخاصة بي</h3><div id="trReqs"></div>
+  </section>
+  <section id="p-abroad" role="tabpanel" hidden>
+    <div class="split even"><section class="box accent" style="--c:var(--ok)"><h3> معادلة وقيد الطلاب العائدين من الخارج</h3>
+      <p class="muted">للطلاب الذين درسوا بمدارس خارج مصر ويرغبون في الالتحاق بالمدارس المصرية.</p>
+      <div class="kv"><span>رسوم المعادلة</span><b>300 جم</b></div><div class="kv"><span>مدة الدراسة والقرار</span><b>7 أيام عمل</b></div>
+      <div class="btn-row"><button class="button" id="abBtn" type="button">تقديم طلب معادلة</button></div></section>
+    <section class="box"><h3>المستندات المطلوبة</h3><ul class="muted" style="line-height:2"><li>شهادة آخر صف دراسي (أصل) مصدقة من سفارة مصر ووزارة الخارجية.</li><li>كشف درجات السنوات السابقة.</li><li>ترجمة معتمدة للشهادات غير العربية.</li><li>صورة جواز السفر وشهادة الميلاد.</li><li>إثبات الإقامة بالخارج (تأشيرة/إقامة) للمدة الدراسية.</li></ul></section></div>
+    <h3 class="section-title">طلبات المعادلة الخاصة بي</h3><div id="abReqs"></div>
+  </section>
+  <section id="p-svc" role="tabpanel" hidden><div id="svcGrid"></div><h3 class="section-title"> متابعة الطلبات</h3><div id="reqs"></div></section>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const CAT = Gov.CAT;
+  const $ = id => document.getElementById(id), S = D.edu(), e = ID.esc; let cur = null;
+  $('uName').textContent = u.name;
+  const order = S.slice().reverse();
+  $('stages').innerHTML = order.map(s => '<button type="button" class="stage" data-k="' + s.key + '" aria-pressed="false"><h4>' + s.cls + '</h4><p>سنة التخرج: ' + s.year + ' • ' + (s.done ? '<span class="ok">منتهية</span>' : '<span class="warn">لم تنتهِ بعد</span>') + '</p></button>').join('');
+  $('stages').addEventListener('click', ev => {
+    const b = ev.target.closest('.stage'); if (!b) return;
+    document.querySelectorAll('.stage').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    cur = S.find(s => s.key === b.dataset.k); $('cert').hidden = true;
+    $('sel').innerHTML = cur.done ? 'المرحلة المختارة: <b class="hl">' + cur.name + '</b> لعام ' + cur.year : 'المرحلة <b>' + cur.name + '</b> لم تنتهِ بعد، ومن المتوقع أن تنتهي عام ' + cur.year + '.';
+    $('actions').hidden = !cur.done;
+  });
+  $('actions').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-doc]'); if (!b || !cur) return;
+    const grades = b.dataset.doc === 'grades';
+    $('c-title').textContent = grades ? 'بيان درجات تفصيلي' : 'بيان نجاح';
+    $('c-name').textContent = u.name; $('c-id').textContent = u.nid; $('c-stage').textContent = cur.name; $('c-year').textContent = cur.year;
+    $('c-tbl').innerHTML = grades ? '<table><thead><tr><th>المادة</th><th>النهاية العظمى</th><th>درجة الطالب</th></tr></thead><tbody>' + cur.rows.map(r => '<tr><td>' + r.n + '</td><td>' + r.max + '</td><td>' + r.score + '</td></tr>').join('') + '<tr><th>المجموع</th><th>' + cur.max + '</th><th>' + cur.total + '</th></tr></tbody></table>' : '';
+    $('c-res').textContent = grades ? 'التقدير العام: ' + cur.grade + ' (' + cur.pct + '%)' : 'ناجح ومنقول للمرحلة التالية، بتقدير ' + cur.grade + '.';
+    ID.qr($('c-qr'), 'DIGITALSEGYPT-DEMO|EDU-' + cur.key.toUpperCase() + '|' + ID.refCode(u.nid + cur.key + b.dataset.doc));
+    ID.log('وثيقة تعليمية', (grades ? 'بيان درجات' : 'بيان نجاح') + ' - ' + cur.name);
+    $('cert').hidden = false; $('cert').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  $('close').onclick = () => { $('cert').hidden = true; };
+
+  $('trName').textContent = u.name; $('trSchool').textContent = D.exam().school;
+  $('trBtn').onclick = () => Gov.run(CAT.transfer[0], { refresh: reqs });
+  $('abBtn').onclick = () => Gov.run(CAT.abroad[0], { refresh: reqs });
+  function reqs() { Gov.requestsList($('trReqs'), r => /تحويل من مدرسة/.test(r.title)); Gov.requestsList($('abReqs'), r => /معادلة شهادة دراسية/.test(r.title)); }
+  Gov.grid($('svcGrid'), CAT.edu, {});
+  Gov.tabs(document, { certs: {}, transfer: { on: reqs }, abroad: { on: reqs }, svc: { on: () => Gov.requestsList($('reqs'), r => /التربية/.test(r.org)) } }, 'certs');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | الجوازات والهجرة والخارجية</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.passport{color:#eef3ff;background:linear-gradient(135deg,#1262c9,#1b4f72);border:2px solid var(--brand);border-radius:20px;padding:28px;position:relative;overflow:hidden;box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.passport::after{content:"EGYPT";position:absolute;left:-10px;bottom:-24px;font-size:6rem;font-weight:800;opacity:.07}
+.passport h2{margin:0 0 12px}
+.passport .qr{background:#fff;padding:6px;border-radius:8px;line-height:0;display:inline-block}
+.passport .qr svg{width:92px;height:92px}
+.mfa{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-inline-start:4px solid var(--ok);background:#3ddc9710;padding:14px;border-radius:10px;margin-top:10px}
+.stamp{border:2px dashed var(--ok);color:var(--ok);padding:6px 12px;transform:rotate(-4deg);font-weight:700}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › <a href="interior.html">الداخلية</a> › الجوازات والخارجية</div>
+  <div class="page-head"><div><h1> الجوازات والهجرة ووزارة الخارجية</h1><p>إصدار وتجديد جواز السفر • بيان التحركات • تصديقات وخدمات الخارجية</p></div></div>
+  <div class="tabs" role="tablist" aria-label="أقسام الجوازات">
+    <button role="tab" id="t-ov" aria-selected="true" aria-controls="p-ov"> جواز سفري</button>
+    <button role="tab" id="t-svc" aria-selected="false" aria-controls="p-svc"> كل الخدمات</button>
+    <button role="tab" id="t-reqs" aria-selected="false" aria-controls="p-reqs"> طلباتي</button>
+  </div>
+  <section id="p-ov" role="tabpanel">
+    <section class="passport" aria-label="جواز السفر">
+      <div>
+        <h2>جواز سفر إلكتروني (Digital)</h2>
+        <p><b>الاسم:</b> <span id="pName" class="hl" style="font-size:1.2rem"></span></p>
+        <p><b>رقم الجواز:</b> <span class="mono" id="pNo"></span></p>
+        <p><b>الجنسية:</b> مصري / EGY</p>
+        <p><b>تاريخ الإصدار:</b> <span id="pIssue"></span></p>
+        <p><b>تاريخ الانتهاء:</b> <span id="pExp"></span></p>
+        <div class="btn-row"><button class="button sm" id="renew" type="button"> تجديد / تحديث الجواز</button><button class="button outline sm" id="newpp" type="button"> + تقديم على جواز جديد</button></div>
+      </div>
+      <div style="text-align:left"><span class="pill ok" id="pStatus" style="font-size:.95rem"></span><br><br><div class="qr" id="pQr"></div></div>
+    </section>
+    <div class="stack" style="margin-top:22px">
+      <section class="box" aria-labelledby="h-mv"><h3 id="h-mv"> بيان التحركات الرقمي</h3>
+        <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الجهة / المنفذ</th><th>نوع الحركة</th></tr></thead><tbody id="moves"></tbody></table></div>
+        <div class="btn-row no-print"><button class="button" id="prMoves" type="button"> طباعة شهادة تحركات</button></div></section>
+      <section class="box" aria-labelledby="h-mfa"><h3 id="h-mfa"> تصديقات وزارة الخارجية</h3><div id="attest"></div>
+        <div class="btn-row no-print"><button class="button outline" id="newAtt" type="button">+ طلب تصديق جديد</button></div></section>
+    </div>
+  </section>
+  <section id="p-svc" role="tabpanel" hidden><div id="svcGrid"></div></section>
+  <section id="p-reqs" role="tabpanel" hidden><div class="box"><h3> متابعة طلباتي</h3><div id="reqs"></div></div></section>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const $ = id => document.getElementById(id), st = ID.state(), e = ID.esc, L = Gov.CAT.passports, find = id => L.find(x => x.id === id);
+  function render() {
+    const p = Gov.ppData(u);
+    $('pName').textContent = u.name; $('pNo').textContent = p.no; $('pIssue').textContent = ID.fmtDate(p.issue); $('pExp').textContent = ID.fmtDate(p.expiry);
+    const left = (p.expiry - ID.NOW) / 864e5, s = $('pStatus');
+    s.textContent = p.pending ? 'قيد الإصدار / بانتظار الاستلام' : left < 0 ? 'منتهي / Expired' : left < 180 ? 'ينتهي قريباً / Expiring' : 'ساري / Valid'; s.className = 'pill ' + (p.pending ? 'info' : left < 0 ? 'bad' : left < 180 ? 'warn' : 'ok');
+    ID.qr($('pQr'), 'DIGITALSEGYPT-DEMO|PASSPORT|' + ID.refCode(u.nid + p.no));
+    $('moves').innerHTML = p.moves.length ? p.moves.map(m => '<tr><td class="num">' + ID.fmtDate(m.date) + '</td><td>' + m.port + '</td><td>' + m.type + ' (مكتمل)</td></tr>').join('') : '<tr><td colspan="3" class="muted">لا توجد تحركات مسجلة.</td></tr>';
+    $('attest').innerHTML = st.attest.length ? st.attest.map(a => '<div class="mfa"><div><p><b>المستند:</b> ' + e(a.doc) + '</p><p><b>كود التصديق:</b> <span class="mono">' + e(a.code) + '</span> <small>• ' + ID.fmtDate(new Date(a.t)) + '</small></p></div><div class="stamp">مصدق إلكترونياً</div></div>').join('') : '<p class="muted">لا توجد تصديقات سابقة.</p>';
+  }
+  $('renew').onclick = () => Gov.run(find('pp_renew'), { refresh: render });
+  $('newpp').onclick = () => Gov.run(find('pp_new'), { refresh: render });
+  $('newAtt').onclick = () => Gov.run(find('mfa_attest'), { refresh: render });
+  $('prMoves').onclick = () => Gov.printHtml(Gov.DOCS.moves({}, u));
+  Gov.grid($('svcGrid'), L, { refresh: render });
+  Gov.tabs(document, { ov: {}, svc: {}, reqs: { on: () => Gov.requestsList($('reqs')) } }, 'ov');
+  render();
+});
+</script>
+</body>
+</html>

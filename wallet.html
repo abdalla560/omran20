@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | المحفظة الرقمية الموحدة</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:24px;justify-items:center}
+.doc-block{width:100%;max-width:400px}
+.doc-block .btn-row{justify-content:center}
+.wc .pend{position:absolute;bottom:10px;left:14px;font-size:.7rem;background:#fff3cd;color:#7a5b00;padding:1px 10px;border-radius:99px;font-weight:700}
+.wc{width:100%;max-width:380px;border-radius:18px;padding:18px;position:relative;box-shadow:var(--shadow);overflow:hidden;min-height:215px}
+.wc .cap{position:absolute;top:12px;left:16px;font-size:.7rem;font-weight:800}
+.nid{background:linear-gradient(135deg,#e6edf3,#fafcfd);color:#26333f}
+.nid .cap{color:#c0392b}
+.photo{width:76px;height:96px;background:#cfd8df;border:2px solid #7d8b96;border-radius:6px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;font-size:.6rem;color:#556}
+.photo svg{width:70px;height:80px}
+.wc .row{display:flex;gap:14px;margin-top:20px}
+.wc .row div{flex:1}
+.wc p{margin:3px 0;font-size:.85rem}
+.wc .no{font:700 1.15rem Consolas,monospace;letter-spacing:2px;margin-top:10px;direction:ltr;text-align:right}
+.birth{background:#fff;color:#111;border:5px double #27ae60}
+.birth .t{text-align:center;border-bottom:1px solid #27ae60;margin:0 0 8px;font-weight:800;padding-bottom:4px}
+.birth .qr{width:70px;margin:6px auto 0;line-height:0}
+.lic{background:linear-gradient(135deg,#d4fc79,#96e6a1);color:#12351f;border:1px solid #27ae60}
+.pay{background:linear-gradient(135deg,#0b1d29,#1c3d52);border:1px solid var(--brand);text-align:center;color:#fff}
+.chip{width:42px;height:32px;border-radius:6px;background:linear-gradient(135deg,#ffd700,#b8860b)}
+.pay .qrbox{background:#fff;padding:10px;border-radius:10px;display:inline-block;line-height:0;margin:8px 0}
+.pay .qrbox svg{width:140px;height:140px}
+.na{background:var(--panel);border:1px dashed var(--line);color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center}
+.act{list-style:none;margin:0;padding:0}
+.act li{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+.act li:last-child{border:0}.act b{color:var(--text)}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › المحفظة</div>
+  <div class="page-head"><div><h1> محفظتي الرقمية</h1><p>وثائقك وإيصالاتك ومواعيد استلامك في مكان واحد</p></div></div>
+
+  <div class="tabs no-print" role="tablist" aria-label="أقسام المحفظة">
+    <button role="tab" id="t-cards" aria-selected="true" aria-controls="p-cards"> الوثائق</button>
+    <button role="tab" id="t-pay" aria-selected="false" aria-controls="p-pay"> الدفع</button>
+    <button role="tab" id="t-receipts" aria-selected="false" aria-controls="p-receipts"> الإيصالات</button>
+    <button role="tab" id="t-appts" aria-selected="false" aria-controls="p-appts"> المواعيد</button>
+    <button role="tab" id="t-reqs" aria-selected="false" aria-controls="p-reqs"> طلباتي</button>
+    <button role="tab" id="t-act" aria-selected="false" aria-controls="p-act"> النشاط</button>
+  </div>
+
+  <section id="p-cards" role="tabpanel" aria-labelledby="t-cards"><div class="cards" id="docs"></div></section>
+  <section id="p-pay" role="tabpanel" aria-labelledby="t-pay" hidden><div class="cards" id="payCards"></div></section>
+  <section id="p-receipts" role="tabpanel" aria-labelledby="t-receipts" hidden><div class="box"><h3> إيصالات الدفع وتقديم الطلبات</h3><p class="muted">اضغط «عرض / طباعة» لطباعة الإيصال على الطابعة، وأحضره معك عند الاستلام.</p><div id="rcpts"></div></div></section>
+  <section id="p-appts" role="tabpanel" aria-labelledby="t-appts" hidden><div class="box"><h3> مواعيد الاستلام والحجوزات</h3><p class="muted">مواعيد استلام الوثائق (جواز السفر، البطاقة، الرخصة...) وحجوزات الكشف والزيارات.</p><div id="appts"></div></div></section>
+  <section id="p-reqs" role="tabpanel" aria-labelledby="t-reqs" hidden><div class="box"><h3> متابعة الطلبات</h3><div id="reqs"></div></div></section>
+  <section id="p-act" role="tabpanel" aria-labelledby="t-act" hidden><div class="box"><h3>آخر العمليات</h3><ul class="act" id="activity"></ul></div></section>
+</main>
+
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const e = ID.esc, st = ID.state(), $ = id => document.getElementById(id), DD = Gov.DOCDEF;
+  const sil = '<svg viewBox="0 0 70 80" aria-hidden="true"><circle cx="35" cy="28" r="15" fill="#7d8b96"/><path d="M6 80c2-26 16-32 29-32s27 6 29 32z" fill="#7d8b96"/></svg>';
+  const btns = (k, ren, upd, printLabel) => '<div class="btn-row no-print"><button class="button sm" data-a="print" data-k="' + k + '"> ' + printLabel + '</button><button class="button sm green" data-a="renew" data-k="' + k + '"> ' + ren + '</button><button class="button sm outline" data-a="update" data-k="' + k + '"> ' + upd + '</button></div>';
+
+  function renderDocs() {
+    let h = '';
+    if (u.age >= 16) {
+      const x = Gov.idData(u);
+      h += '<div class="doc-block"><article class="wc nid" aria-label="بطاقة الرقم القومي"><span class="cap">جمهورية مصر العربية</span><div class="row"><div class="photo">' + sil + '</div><div><p><b>بطاقة تحقيق الشخصية</b></p><p style="font-size:1rem"><b>' + e(u.name) + '</b></p><p>تاريخ الميلاد: ' + ID.fmtDate(new Date(u.y, u.m - 1, u.d)) + '</p><p>العنوان: ' + e(x.addr) + ' - ' + e(u.gov) + '</p></div></div><div class="no">' + u.nid + '</div><p style="position:absolute;bottom:10px;right:16px;font-size:.65rem">تاريخ الانتهاء: ' + ID.fmtDate(x.exp) + '</p>' + (x.pending ? '<span class="pend">بانتظار الاستلام من السجل المدني</span>' : '') + '</article>' + btns('id', 'تجديد البطاقة (' + DD['id.renew'].fee + ' جم)', 'تحديث البيانات (' + DD['id.update'].fee + ' جم)', 'طباعة البطاقة') + '</div>';
+    } else h += '<article class="wc na"><div><b> بطاقة الرقم القومي</b><p>تُصدر بعد بلوغ سن 16 سنة.</p></div></article>';
+
+    const b = Gov.birthData(u);
+    h += '<div class="doc-block" id="birth"><article class="wc birth" aria-label="وثيقة الميلاد"><p class="t">وثيقة ميلاد مميكنة</p><p>الاسم: <b>' + e(b.name) + '</b></p><p>تاريخ الميلاد: ' + ID.fmtDate(b.dob) + '</p><p>النوع: ' + u.gender + '</p><p>محل الميلاد: ' + e(b.gov) + ' - جمهورية مصر العربية</p><p style="font-size:.7rem;color:#555">تاريخ الاستخراج: ' + ID.fmtDate(b.issued) + '</p><div class="qr" data-qr="DIGITALSEGYPT-DEMO|BIRTH|' + ID.refCode(u.nid + 'birth') + '"></div></article>' + btns('birth', 'نسخة حديثة (' + DD['birth.renew'].fee + ' جم)', 'تصحيح البيانات (' + DD['birth.update'].fee + ' جم)', 'طباعة الشهادة') + '</div>';
+
+    const l = Gov.licData(u);
+    if (l.has) {
+      const expired = l.exp < ID.NOW;
+      h += '<div class="doc-block"><article class="wc lic" aria-label="رخصة القيادة"><p><b>رخصة قيادة</b> <span class="pill ' + (expired ? 'bad' : 'ok') + '">' + (expired ? 'منتهية' : 'سارية') + '</span></p><p style="font-size:1rem"><b>' + e(u.name) + '</b></p><p>رقم الرخصة: <span class="mono">' + l.no + '</span></p><p>الفئة: ' + e(l.cls) + '</p><p>تاريخ الإصدار: ' + ID.fmtDate(l.issue) + '</p><p>تاريخ الانتهاء: ' + ID.fmtDate(l.exp) + '</p>' + (l.pending ? '<span class="pend">بانتظار الاستلام من وحدة المرور</span>' : '') + '</article>' + btns('license', 'تجديد الرخصة (' + DD['license.renew'].fee + ' جم)', 'تحديث البيانات (' + DD['license.update'].fee + ' جم)', 'طباعة الرخصة') + '</div>';
+    } else h += '<article class="wc na"><div><b> رخصة القيادة</b><p>تتاح بعد بلوغ سن 18 سنة.</p></div></article>';
+    $('docs').innerHTML = h; ID.paintQr($('docs'));
+  }
+
+  function renderPay() {
+    const bal = D.balances();
+    $('payCards').innerHTML =
+      '<article class="wc pay" aria-label="بطاقة الدفع"><div style="display:flex;justify-content:space-between;align-items:center"><div class="chip"></div><span class="mc"><i></i><i></i></span></div><p style="margin:10px 0;font-size:.85rem">امسح الكود للدفع اللحظي (InstaPay)</p><div class="qrbox" data-qr="DIGITALSEGYPT-DEMO|PAY|' + ID.refCode(u.nid + 'pay') + '"></div><p style="color:var(--brand);font-weight:700;margin:6px 0 0">' + e(u.name) + '</p></article>' +
+      '<article class="box" style="width:100%;max-width:380px"><h3> الرصيد المتاح</h3><div class="big">' + ID.fmt(bal.ahli) + ' <small style="font-size:1rem">جم</small></div><p class="muted">الحساب الجاري - ' + e(D.bank().ahli.bank) + ' ' + D.bank().ahli.mask + '</p><a class="button outline sm" href="banks.html" style="margin-top:8px">تفاصيل الحسابات</a></article>';
+    ID.paintQr($('payCards'));
+  }
+
+  function renderReceipts() {
+    $('rcpts').innerHTML = st.receipts.length ? st.receipts.map(r => {
+      const free = !(r.amount > 0);
+      return '<div class="appt-card"><div><b>' + e(r.service) + '</b><br><small>' + e(r.org) + ' • ' + r.id + ' • ' + Gov.dt(r.t) + '</small>' + (r.pickup ? '<br><small>' + (r.appt ? '📅 ' + Gov.dayLabel(r.appt.date) + ' ' + r.appt.time : ' موعد الاستلام لم يُحجز بعد') + '</small>' : '') + '</div><div><span class="pill ' + (free ? 'info' : 'ok') + '">' + (free ? 'طلب بدون رسوم' : 'مدفوع ' + ID.fmt(r.amount) + ' جم') + '</span> <button class="button sm" data-rc="' + r.id + '">عرض / طباعة</button></div></div>';
+    }).join('') : '<div class="empty"><span class="em"></span>لا توجد إيصالات بعد. ستظهر هنا كل عملية دفع أو تقديم طلب.</div>';
+  }
+  $('rcpts').onclick = ev => { const b = ev.target.closest('[data-rc]'); if (!b) return; Gov.receipt(b.dataset.rc).box.addEventListener('click', () => setTimeout(renderAll, 50)); };
+
+  function renderAppts() {
+    const L = st.appointments.slice().sort((a, b) => (a.date + a.time) < (b.date + b.time) ? -1 : 1);
+    $('appts').innerHTML = L.length ? L.map(a => {
+      const title = a.title || ((a.clinic || '') + ' - ' + (a.hospital || '')), place = a.place || a.hospital || '', date = a.date, past = Gov.fromIso(date) < new Date(new Date().setHours(0, 0, 0, 0));
+      return '<div class="appt-card ' + (a.mode === 'pickup' ? 'pk' : '') + '"><div><b>' + e(title) + '</b><br><small>' + e(place) + '</small><br><small> ' + Gov.dayLabel(date) + ' • ' + e(a.time || '10:00 ص') + '</small></div><div class="btn-row" style="margin:0"><button class="button sm" data-ap="' + a.id + '"> طباعة الورقة</button>' + (past ? '<span class="pill">منتهٍ</span>' : '<button class="button ghost sm" data-ac="' + a.id + '">إلغاء</button>') + '</div></div>';
+    }).join('') : '<div class="empty"><span class="em"></span>لا توجد مواعيد. بعد سداد خدمة تتطلب استلاماً يمكنك حجز موعد الاستلام من الإيصال.</div>';
+  }
+  $('appts').onclick = ev => {
+    const p = ev.target.closest('[data-ap]'), c = ev.target.closest('[data-ac]');
+    if (p) { const a = st.appointments.find(x => String(x.id) === p.dataset.ap); if (a) Gov.apptModal(a.mode ? a : Object.assign({ mode: 'visit', what: 'كشف طبي', place: a.hospital, clinic: a.clinic, time: '10:00 ص' }, a)); }
+    if (c) ID.confirm('إلغاء الموعد', 'هل تريد إلغاء هذا الموعد؟', 'إلغاء الموعد', true).then(ok => { if (!ok) return; const a = st.appointments.find(x => String(x.id) === c.dataset.ac); st.appointments = st.appointments.filter(x => String(x.id) !== c.dataset.ac); st.receipts.forEach(r => { if (a && r.appt && r.appt.id === a.id) delete r.appt; }); ID.log('إلغاء موعد', a ? (a.title || 'موعد') : 'موعد'); ID.save(); renderAll(); });
+  };
+
+  $('docs').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-a]'); if (!b) return; const k = b.dataset.k, a = b.dataset.a;
+    if (a === 'print') return Gov.printHtml(Gov.DOCS[k]({}, u));
+    Gov.run(DD[k + '.' + a], { refresh: renderAll });
+  });
+  function renderAct() { $('activity').innerHTML = st.activity.length ? st.activity.slice(0, 25).map(a => '<li><span><b>' + e(a.title) + '</b> · ' + e(a.text) + '</span><small>' + ID.fmtDate(new Date(a.t)) + '</small></li>').join('') : '<li>لا توجد عمليات بعد.</li>'; }
+  function renderAll() { renderDocs(); renderPay(); renderReceipts(); renderAppts(); Gov.requestsList($('reqs')); renderAct(); }
+  renderAll();
+  Gov.tabs(document, { cards: {}, pay: {}, receipts: { on: renderReceipts }, appts: { on: renderAppts }, reqs: { on: () => Gov.requestsList($('reqs')) }, act: { on: renderAct } }, 'cards');
+  if (location.hash === '#birth') setTimeout(() => $('birth').scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+});
+</script>
+</body>
+</html>

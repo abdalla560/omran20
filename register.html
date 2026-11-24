@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | إنشاء الملف الرقمي</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.reg{max-width:760px;margin:0 auto}
+.reg h1{text-align:center;color:var(--brand);margin-bottom:4px}
+.reg .lead{text-align:center;color:var(--muted);margin-bottom:10px}
+.hint{min-height:1.4em;font-size:.88rem}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+<div class="reg box">
+  <h1> تسجيل البيانات الوطنية</h1>
+  <p class="lead">تُستخدم هذه البيانات لإنشاء هويتك الرقمية وتفعيل خدمات الدولة.</p>
+
+  <form id="regForm" novalidate>
+    <div class="section-title">البيانات الأساسية</div>
+    <div class="form-grid">
+      <div class="full"><label for="name">الاسم (ثلاثي على الأقل)</label><input id="name" autocomplete="name" placeholder="كما هو في بطاقة الرقم القومي"><div class="ferr" id="e-name"></div></div>
+      <div><label for="nid">الرقم القومي (14 رقم)</label><input id="nid" inputmode="numeric" maxlength="14" placeholder="29XXXXXXXXXXXX" dir="ltr" style="text-align:right" autocomplete="off"><div class="hint" id="nidHint" aria-live="polite"></div><div class="ferr" id="e-nid"></div></div>
+      <div><label for="dob">تاريخ الميلاد (يُستخرج من الرقم القومي)</label><input id="dob" type="date" readonly tabindex="-1"></div>
+      <div class="full"><label for="phone">رقم الموبايل (يصله رمز التحقق عند كل تسجيل دخول)</label><input id="phone" type="tel" inputmode="numeric" maxlength="20" placeholder="01XXXXXXXXX" dir="ltr" style="text-align:right" autocomplete="tel"><div class="ferr" id="e-phone"></div></div>
+    </div>
+
+    <div class="section-title">السجل الأكاديمي <small>(اختياري)</small></div>
+    <div class="form-grid">
+      <div class="full"><label for="uni">الجامعة</label><input id="uni" list="unis" placeholder="مثال: جامعة القاهرة"><datalist id="unis"><option>جامعة القاهرة</option><option>جامعة عين شمس</option><option>جامعة الإسكندرية</option><option>جامعة المنصورة</option><option>جامعة أسيوط</option><option>جامعة طنطا</option><option>جامعة حلوان</option><option>جامعة بنها</option></datalist></div>
+      <div><label for="faculty">الكلية / التخصص</label><select id="faculty"><option value="">— غير محدد —</option><option>الحاسبات والمعلومات</option><option>الهندسة</option><option>التجارة والاقتصاد</option><option>الطب</option><option>الحقوق</option><option>نظم معلومات الأعمال</option><option>العلوم</option><option>الآداب</option></select></div>
+      <div><label for="gradYear">سنة التخرج</label><input id="gradYear" type="number" inputmode="numeric" placeholder="2020"><div class="ferr" id="e-gradYear"></div></div>
+      <div><label for="degree">أعلى درجة علمية</label><select id="degree"><option>بكالوريوس</option><option>ماجستير</option><option>دكتوراه</option></select></div>
+      <div class="full" id="thesisWrap" hidden><label for="thesis">عنوان الرسالة / الأطروحة</label><input id="thesis" maxlength="200" placeholder="عنوان رسالة الماجستير أو الدكتوراه"><div class="ferr" id="e-thesis"></div></div>
+    </div>
+
+    <div class="ferr" id="formErr" role="alert" style="margin-top:12px"></div>
+    <button class="button block" type="submit" style="margin-top:14px;font-size:1.1rem">حفظ وتفعيل الملف الرقمي</button>
+    <p style="text-align:center"><a href="index.html">لديك حساب؟ العودة لتسجيل الدخول</a></p>
+  </form>
+</div>
+</main>
+
+<script src="assets/js/app.js"></script>
+<script>
+ID.ready(function () {
+  const $ = id => document.getElementById(id);
+  const set = (k, m) => { $('e-' + k).textContent = m || ''; $(k).setAttribute('aria-invalid', String(!!m)); return !m; };
+
+  $('nid').addEventListener('input', function () {
+    const v = ID.toEn(this.value).replace(/\D/g, ''); this.value = v;
+    const h = $('nidHint'), n = v.length === 14 ? ID.parseNid(v) : null;
+    $('dob').value = n && n.ok ? n.dob : '';
+    h.className = 'hint ' + (n ? (n.ok ? 'ok' : 'bad') : 'muted');
+    h.textContent = n ? (n.ok ? '✓ ' + n.gov + ' • ' + n.gender + ' • ' + n.age + ' سنة' : n.err) : (v.length ? v.length + ' / 14' : '');
+  });
+  $('degree').addEventListener('change', function () { $('thesisWrap').hidden = this.value === 'بكالوريوس'; });
+
+  $('regForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = $('name').value, n = ID.parseNid($('nid').value), fac = $('faculty').value, gy = $('gradYear').value.trim(), deg = $('degree').value, th = $('thesis').value.trim();
+    let ok = true, first = null;
+    const chk = (k, m) => { if (!set(k, m)) { ok = false; if (!first) first = $(k); } };
+    chk('name', ID.validName(name) ? '' : 'اكتب اسمك ثلاثياً على الأقل (حروف فقط).');
+    chk('nid', n.ok ? '' : n.err);
+    chk('phone', ID.validPhone($('phone').value) ? '' : 'اكتب رقم موبايل مصري صحيحاً (مثال: 01012345678).');
+    if (fac || gy) {
+      const y = +gy, min = n.ok ? n.y + 20 : 1950;
+      chk('gradYear', !fac ? 'اختر الكلية أولاً.' : (!/^\d{4}$/.test(gy) || y < min || y > ID.NOW.getFullYear()) ? 'سنة التخرج غير منطقية (من ' + min + ' إلى ' + ID.NOW.getFullYear() + ').' : '');
+    } else set('gradYear', '');
+    if (deg !== 'بكالوريوس') chk('thesis', th.length >= 10 ? '' : 'اكتب عنوان الرسالة (10 أحرف على الأقل).'); else set('thesis', '');
+    if (deg !== 'بكالوريوس' && !fac) { $('formErr').textContent = 'اختر الكلية لتسجيل درجة الدراسات العليا.'; return; }
+    $('formErr').textContent = '';
+    if (!ok) { first.focus(); return; }
+
+    const r = ID.addUser({ name: name, nid: n.nid, phone: ID.normPhone($('phone').value), uni: $('uni').value.trim(), faculty: fac, gradYear: gy, degree: deg, thesis: deg === 'بكالوريوس' ? '' : th });
+    if (!r.ok) { $('formErr').innerHTML = ID.esc(r.err) + (r.exists ? ' <a href="index.html">دخول</a>' : ''); return; }
+    ID.toast('تم تسجيل بياناتك. سجّل الدخول الآن وسيصلك رمز التحقق على موبايلك.');
+    setTimeout(() => { location.href = 'index.html#login'; }, 1400);
+  });
+}, { public: true });
+</script>
+</body>
+</html>

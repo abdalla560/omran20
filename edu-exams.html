@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | أرقام الجلوس واللجان</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.exam{max-width:720px;margin:0 auto}
+.seat{font-size:2.8rem;font-weight:800;color:var(--brand);text-align:center;letter-spacing:6px;margin:14px 0 0;text-shadow:0 0 18px #e9b44c55}
+.stamp{border:2px dashed #e9b44c80;padding:10px;margin-top:18px;text-align:center;color:var(--brand);font-size:.85rem}
+.hdr{text-align:center;margin-bottom:12px}
+.hdr img{height:64px;background:#fff;border-radius:10px;padding:3px}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › وزارة التربية والتعليم › أرقام الجلوس والنتائج</div>
+  <div class="page-head"><div><h1> أرقام الجلوس والامتحانات والنتائج</h1><p id="sub"></p></div><a class="button ghost sm" href="edu-basic.html">الخدمات التعليمية</a></div>
+  <div class="tabs" role="tablist" aria-label="أقسام الامتحانات">
+    <button role="tab" id="t-seat" aria-selected="true" aria-controls="p-seat"> رقم الجلوس</button>
+    <button role="tab" id="t-sched" aria-selected="false" aria-controls="p-sched"> جدول الامتحانات</button>
+    <button role="tab" id="t-results" aria-selected="false" aria-controls="p-results"> النتائج</button>
+    <button role="tab" id="t-svc" aria-selected="false" aria-controls="p-svc"> الخدمات</button>
+  </div>
+
+  <section id="p-seat" role="tabpanel">
+    <label for="stageSel">اختر المرحلة</label><select id="stageSel" style="max-width:360px"></select>
+    <section class="box exam" aria-label="بطاقة رقم الجلوس" style="margin-top:14px">
+      <div class="hdr"><img src="assets/img/logo-digitals.svg" alt=""><p class="muted" style="margin-top:8px">وزارة التربية والتعليم والتعليم الفني</p></div>
+      <div class="kv"><span>اسم الطالب</span><b id="n"></b></div>
+      <div class="kv"><span>الرقم القومي</span><b class="mono" id="i"></b></div>
+      <div class="kv"><span>الامتحان</span><b id="ex"></b></div>
+      <div class="seat" id="seat"></div>
+      <p class="muted" style="text-align:center;margin-top:0">رقم الجلوس الموحد</p>
+      <div class="kv"><span>المدرسة</span><b id="sc"></b></div>
+      <div class="kv"><span>اللجنة الامتحانية</span><b id="cm"></b></div>
+      <div class="kv"><span>مقر اللجنة</span><b id="ad"></b></div>
+      <div class="kv"><span>الحالة</span><span id="stt"></span></div>
+      <div class="stamp">معتمد رقمياً من منظومة Digitals EGYPT • نموذج تجريبي</div>
+    </section>
+    <div class="btn-row no-print"><button class="button" id="prSeat" type="button"> طباعة بطاقة الجلوس</button></div>
+  </section>
+
+  <section id="p-sched" role="tabpanel" hidden><div class="box"><h3> جدول امتحانات <span id="schedStage"></span></h3><div class="table-wrap"><table><thead><tr><th>المادة</th><th>اليوم والتاريخ</th><th>الوقت</th><th>اللجنة</th></tr></thead><tbody id="schedRows"></tbody></table></div><div class="btn-row no-print"><button class="button" id="prSched" type="button"> طباعة الجدول</button></div></div></section>
+
+  <section id="p-results" role="tabpanel" hidden>
+    <div class="box accent" style="--c:var(--info)"><h3> الاستعلام عن النتيجة برقم الجلوس</h3><div class="btn-row" style="margin:0"><input id="seatIn" inputmode="numeric" placeholder="اكتب رقم الجلوس (6 أرقام)" style="max-width:300px"><button class="button" id="seatGo" type="button">استعلام</button></div><div class="ferr" id="seatErr"></div></div>
+    <div id="resBox" style="margin-top:18px"></div>
+  </section>
+
+  <section id="p-svc" role="tabpanel" hidden><div id="svcGrid"></div><h3 class="section-title"> متابعة الطلبات</h3><div id="reqs"></div></section>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const $ = id => document.getElementById(id), S = D.edu(), X = D.exam(), e = ID.esc, ORG = 'وزارة التربية والتعليم';
+  const seatOf = s => s.key === X.stage.key ? X.seat : 100000 + ID.hash(u.nid + s.key) % 900000;
+  const comm = s => 1 + ID.hash(u.nid + 'c' + s.key) % 60;
+  let cur = X.stage;
+  $('stageSel').innerHTML = S.map(s => '<option value="' + s.key + '"' + (s.key === cur.key ? ' selected' : '') + '>' + s.name + ' - ' + s.year + '</option>').join('');
+  function seatCard() {
+    const s = cur;
+    $('n').textContent = u.name; $('i').textContent = u.nid; $('ex').textContent = s.name + ' - دور أول ' + s.year;
+    $('seat').textContent = seatOf(s); $('sc').textContent = X.school;
+    $('cm').textContent = X.hall + ' - لجنة رقم (' + comm(s) + ')'; $('ad').textContent = u.gov + ' - ' + X.area;
+    $('stt').innerHTML = s.done ? '<span class="pill">امتحان منتهٍ</span>' : '<span class="pill warn">امتحان قادم</span>';
+    $('sub').textContent = 'رقم جلوسك: ' + seatOf(s) + ' • ' + (s.done ? 'آخر امتحان مسجل' : 'امتحانك القادم في عام ' + s.year);
+    $('schedStage').textContent = s.name;
+    const d0 = new Date(s.year, 5, 10);
+    $('schedRows').innerHTML = s.rows.map((r, k) => { const d = new Date(d0); d.setDate(d.getDate() + k * 2 + (k > 2 ? 1 : 0)); return '<tr><td>' + e(r.n) + '</td><td>' + Gov.DAYN[d.getDay()] + ' ' + ID.fmtDate(d) + '</td><td>09:00 ص - 12:00 م</td><td>لجنة ' + comm(s) + '</td></tr>'; }).join('');
+  }
+  $('stageSel').onchange = () => { cur = S.find(s => s.key === $('stageSel').value); seatCard(); };
+  $('prSeat').onclick = () => Gov.printHtml(Gov.DOCS.generic({ title: 'بطاقة رقم الجلوس', rows: [['الامتحان', cur.name + ' - دور أول ' + cur.year], ['رقم الجلوس', String(seatOf(cur))], ['المدرسة', X.school], ['اللجنة', X.hall + ' - لجنة رقم (' + comm(cur) + ')'], ['مقر اللجنة', u.gov + ' - ' + X.area]] }, u));
+  $('prSched').onclick = () => Gov.printHtml(Gov.DOCS.generic({ title: 'جدول امتحانات ' + cur.name, rows: [['رقم الجلوس', String(seatOf(cur))]].concat([...$('schedRows').children].map(tr => [tr.children[0].textContent, tr.children[1].textContent + ' - ' + tr.children[2].textContent])) }, u));
+
+  function showResult(s) {
+    if (!s.done) { $('resBox').innerHTML = '<div class="box empty"><span class="em">⏳</span><h3>لم تصدر نتيجة بعد</h3><p>امتحان ' + s.name + ' لعام ' + s.year + ' لم ينتهِ بعد.</p></div>'; return; }
+    $('resBox').innerHTML = '<div class="box"><h3> نتيجة ' + s.name + ' - ' + s.year + ' <span class="pill ok">' + s.grade + '</span></h3><p>رقم الجلوس: <b class="mono">' + seatOf(s) + '</b> • المجموع: <b>' + s.total + ' / ' + s.max + '</b> (' + s.pct + '%)</p><div class="table-wrap"><table><thead><tr><th>المادة</th><th>النهاية العظمى</th><th>الدرجة</th></tr></thead><tbody>' + s.rows.map(r => '<tr><td>' + e(r.n) + '</td><td>' + r.max + '</td><td>' + r.score + '</td></tr>').join('') + '</tbody></table></div><div class="btn-row no-print"><button class="button" data-pr="' + s.key + '">🖨️ طباعة النتيجة</button></div></div>';
+  }
+  $('resBox').addEventListener('click', ev => { const b = ev.target.closest('[data-pr]'); if (!b) return; const s = S.find(x => x.key === b.dataset.pr); Gov.printHtml(Gov.DOCS.generic({ title: 'نتيجة ' + s.name + ' - ' + s.year, rows: [['رقم الجلوس', String(seatOf(s))]].concat(s.rows.map(r => [r.n, r.score + ' / ' + r.max]), [['المجموع', s.total + ' / ' + s.max], ['النسبة', s.pct + '%'], ['التقدير', s.grade]]) }, u)); });
+  $('seatGo').onclick = () => { const v = ID.toEn($('seatIn').value).trim(); if (!/^\d{6}$/.test(v)) { $('seatErr').textContent = 'اكتب رقم جلوس من 6 أرقام.'; return; }
+    const s = S.find(x => String(seatOf(x)) === v); if (!s) { $('seatErr').textContent = 'رقم الجلوس غير مطابق لأي من امتحاناتك المسجلة.'; $('resBox').innerHTML = ''; return; } $('seatErr').textContent = ''; showResult(s); };
+  $('resBox').innerHTML = '<p class="muted">اكتب رقم جلوسك أعلاه، أو اختر من نتائجك:</p><div class="btn-row">' + S.filter(s => s.done).map(s => '<button class="button outline sm" data-show="' + s.key + '">' + s.name + ' (' + seatOf(s) + ')</button>').join('') + '</div>';
+  document.addEventListener('click', ev => { const b = ev.target.closest('[data-show]'); if (b) showResult(S.find(x => x.key === b.dataset.show)); });
+
+  const L = Gov.CAT.edu.filter(d => ['appeal', 'grades_off', 'cert_lost'].indexOf(d.id) >= 0).concat([
+    { g: 'خدمات الامتحانات', id: 'seat_lost', t: 'بدل فاقد لبطاقة رقم الجلوس', d: 'طباعة بطاقة رقم الجلوس بدل الفاقدة.', fee: 20, org: ORG, doc: 'generic', docData: () => ({ title: 'بطاقة رقم الجلوس (بدل فاقد)', rows: [['الامتحان', cur.name + ' - ' + cur.year], ['رقم الجلوس', String(seatOf(cur))], ['المدرسة', X.school], ['اللجنة', 'لجنة رقم (' + comm(cur) + ')']] }) },
+    { g: 'خدمات الامتحانات', id: 'comm_move', t: 'طلب نقل لجنة امتحان', d: 'طلب نقل لجنتك لقرب السكن أو لظرف خاص.', fee: 50, org: ORG, fields: [{ id: 'why', label: 'سبب النقل', options: ['ظرف صحي', 'تغيير محل الإقامة', 'بُعد اللجنة', 'أخرى'] }, { id: 'to', label: 'المنطقة المطلوبة', test: Gov.minLen(3), msg: 'اكتب المنطقة.' }], steps: ['تم استلام الطلب', 'مراجعة الإدارة', 'تم نقل اللجنة'] }
+  ]);
+  Gov.grid($('svcGrid'), L, {});
+  Gov.tabs(document, { seat: {}, sched: {}, results: {}, svc: { on: () => Gov.requestsList($('reqs'), r => /التربية/.test(r.org)) } }, 'seat');
+  seatCard();
+});
+</script>
+</body>
+</html>

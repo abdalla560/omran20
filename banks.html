@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | المنظومة المصرفية</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.total{color:#eef3ff;background:linear-gradient(135deg,#1e272e,#485460);border:1px solid #e9b44c4d;border-radius:20px;padding:26px;position:relative;overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px}
+.total::before{content:"";position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,#e9b44c0d 0%,transparent 70%);pointer-events:none}
+.visa{color:#eef3ff;background:linear-gradient(45deg,#000,#2c3e50);width:100%;max-width:300px;height:176px;border-radius:14px;padding:18px;margin:14px auto;border:1px solid #ffffff1a;display:flex;flex-direction:column;justify-content:space-between}
+.loan{border-inline-start:4px solid var(--bad);background:#ff5c6c0d;padding:12px 14px;border-radius:8px;margin-bottom:12px}
+.stmt{margin-top:22px}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › المال والاستثمار › البنوك</div>
+  <div class="page-head"><div><h1> القطاع المصرفي والاستثماري الموحد</h1><p>حساباتك • التحويلات • البطاقات والتمويل • الربط مع مصلحة الضرائب</p></div><span class="pill ok">اتصال آمن بنظام iScore</span></div>
+  <div class="tabs" role="tablist" aria-label="أقسام البنوك">
+    <button role="tab" id="t-ov" aria-selected="true" aria-controls="p-ov"> حساباتي</button>
+    <button role="tab" id="t-transfer" aria-selected="false" aria-controls="p-transfer"> التحويلات</button>
+    <button role="tab" id="t-svc" aria-selected="false" aria-controls="p-svc"> الخدمات المصرفية</button>
+    <button role="tab" id="t-tax" aria-selected="false" aria-controls="p-tax"> الربط الضريبي</button>
+  </div>
+  <section id="p-ov" role="tabpanel">
+  <section class="total" aria-label="إجمالي السيولة">
+    <p class="muted" style="margin:0">إجمالي السيولة النقدية الموحدة (ما يعادل بالجنيه)</p>
+    <div class="big" style="font-size:2.4rem"><span id="total"></span> <small style="font-size:1rem;color:#fff">جم</small></div>
+    <div style="display:flex;gap:22px;flex-wrap:wrap;font-size:.92rem"><span id="nb"></span><span id="gr"></span></div>
+  </section>
+
+  <div class="grid">
+    <section class="box" aria-labelledby="a1"><h3 class="hl" id="a1">البنك الأهلي المصري</h3><p id="a1t" class="muted"></p><div class="big" style="font-size:1.6rem" id="a1b"></div><div class="bar"><i id="a1p"></i></div><small id="a1s"></small><hr><button class="button outline sm" id="stmtBtn" type="button">كشف حساب مختوم (QR)</button></section>
+    <section class="box" aria-labelledby="a2"><h3 class="hl" id="a2">بنك مصر - محفظة العملات</h3><p id="a2t" class="muted"></p><div class="big" style="font-size:1.6rem" id="a2b"></div><p class="ok" style="font-size:.85rem">سعر الصرف التجريبي: 1$ = <span id="fx"></span> جم</p><button class="button sm" id="conv" type="button">تحويل للعملة المحلية</button></section>
+    <section class="box" aria-labelledby="a3"><h3 class="hl" id="a3">البطاقات الائتمانية</h3>
+      <div class="visa"><div style="display:flex;justify-content:space-between;align-items:center"><small>World Elite</small><span class="mc"><i></i><i></i></span></div><div class="mono" style="font-size:1.05rem">**** **** **** <span id="cn"></span></div><div style="display:flex;justify-content:space-between;font-size:.75rem"><span id="cname"></span><span>05/30</span></div></div>
+      <p>المستحق للسداد: <b class="bad" id="cdue"></b> <button class="button sm" id="payCard" type="button">سداد</button></p></section>
+  </div>
+
+  <div class="grid" style="margin-top:18px">
+    <section class="box" aria-labelledby="ln"><h3 id="ln" class="hl">القروض والتمويل</h3><div id="loans"></div></section>
+    <section class="box" aria-labelledby="iv"><h3 id="iv" class="hl">الضرائب والجمارك</h3><div id="taxMini"></div><div class="btn-row"><a class="button ghost sm" href="finance.html#tax">مركز الضرائب</a><a class="button ghost sm" href="finance.html#customs">الجمارك</a></div></section>
+  </div>
+
+  <article class="paper stmt" id="stmt" hidden>
+    <div class="head"><img class="logo" src="assets/img/logo-digitals.svg" alt=""><h2>كشف حساب مختوم</h2><h3 id="sBank"></h3></div>
+    <p>صاحب الحساب: <span class="val" id="sName"></span></p><p>رقم الحساب: <span class="val" id="sAcc"></span></p><p>الرصيد الحالي: <span class="val" id="sBal"></span> جم</p>
+    <div class="table-wrap"><table><thead><tr><th>العملية</th><th>التفاصيل</th><th>التاريخ</th></tr></thead><tbody id="sRows"></tbody></table></div>
+    <div class="foot"><div class="qr" id="sQr"></div><div class="seal">البنك<br>ختم رقمي</div></div>
+    <div class="btn-row no-print"><button class="button" type="button" onclick="window.print()">🖨️ طباعة</button><button class="button ghost" type="button" id="sClose">إغلاق</button></div>
+  </article>
+  </section>
+
+  <section id="p-transfer" role="tabpanel" hidden><div class="split even">
+    <section class="box accent" aria-labelledby="h-tf"><h3 id="h-tf">💸 تحويل أموال (InstaPay)</h3><p class="muted">حوّل من حسابك الجاري إلى أي حساب أو رقم موبايل. رسوم التحويل 0.1% (من 2 إلى 15 جم).</p>
+      <div class="kv"><span>الرصيد المتاح</span><b id="tfBal"></b></div><div class="btn-row"><button class="button" id="tfBtn" type="button">تحويل جديد</button></div></section>
+    <section class="box" aria-labelledby="h-th"><h3 id="h-th">آخر التحويلات</h3><div id="tfList"></div></section></div></section>
+
+  <section id="p-svc" role="tabpanel" hidden><div id="svcGrid"></div><h3 class="section-title">📨 متابعة الطلبات</h3><div id="reqs"></div></section>
+
+  <section id="p-tax" role="tabpanel" hidden>
+    <div class="box accent" style="--c:var(--ok)"><h3> الربط بين حساباتك البنكية ومصلحة الضرائب</h3>
+      <p class="muted">تُحتسب الضريبة على الفوائد (20%) وتُخصم من المنبع، وتظهر في إقرارك الضريبي السنوي تلقائياً.</p>
+      <div class="kv"><span>رقم التسجيل الضريبي</span><b class="mono" id="txNo"></b></div>
+      <div class="kv"><span>إجمالي الفوائد السنوية (تقديري)</span><b id="txInt"></b></div>
+      <div class="kv"><span>ضريبة الفوائد المخصومة من المنبع</span><b id="txWh"></b></div>
+      <div class="kv"><span>الضرائب المستحقة السداد حالياً</span><b id="txDue"></b></div>
+      <div class="kv"><span>السداد التلقائي من الحساب الجاري</span><span id="txAuto"></span></div>
+      <div class="btn-row"><button class="button" id="txToggle" type="button"></button><a class="button outline" href="finance.html#tax">فتح بوابة الضرائب والشركات</a></div></div>
+    <div class="box" style="margin-top:18px"><h3>الحسابات المرتبطة وفوائدها</h3><div class="table-wrap"><table><thead><tr><th>الحساب</th><th>الفائدة السنوية</th><th>الضريبة المخصومة (20%)</th></tr></thead><tbody id="txRows"></tbody></table></div></div>
+  </section>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const GL = Gov.CAT.bank;
+  const $ = id => document.getElementById(id), st = ID.state(), b = D.bank(), f = D.finance(), e = ID.esc;
+  function render() {
+    const bal = D.balances();
+    $('total').textContent = ID.fmt(bal.total); $('nb').textContent = ' ' + bal.banks + (bal.banks === 1 ? ' بنك مرتبط' : ' بنوك مرتبطة'); $('gr').textContent = ' +' + b.growth + '% نمو سنوي (تجريبي)';
+    $('a1t').textContent = b.ahli.type + ': ' + b.ahli.mask; $('a1b').innerHTML = ID.fmt(bal.ahli) + ' <small>جم</small>';
+    const base = Math.max(1, b.ahli.base); $('a1p').style.width = Math.min(100, Math.round(bal.ahli / base * 100)) + '%'; $('a1s').textContent = 'معدل الإنفاق الشهري التقريبي: ' + ID.fmt(b.monthly) + ' جم';
+    $('a2t').textContent = b.misr.type + ': ' + b.misr.mask; $('a2b').innerHTML = ID.fmt(bal.usd) + ' <small>$</small>'; $('fx').textContent = ID.FX;
+    $('conv').disabled = bal.usd <= 0;
+    $('cn').textContent = b.cardNo; $('cname').textContent = u.name;
+    const due = st.cardPaid ? 0 : b.cardDue; $('cdue').textContent = ID.fmt(due) + ' جم'; $('payCard').hidden = due === 0;
+    $('loans').innerHTML = b.loans.length ? b.loans.map(l => '<div class="loan"><p><b>' + l.name + '</b> - قيد السداد</p><p>إجمالي القرض: ' + ID.fmt(l.total) + ' جم</p><p>الأقساط المتبقية: ' + l.left + ' شهر</p><div class="bar" style="--c:var(--bad)"><i style="width:' + l.paid + '%"></i></div><small>تم سداد ' + l.paid + '% من إجمالي التمويل</small></div>').join('') : '<p class="muted">لا توجد قروض أو تمويلات قائمة.</p>';
+    const T = Gov.taxProfile(), SH = Gov.shipments().filter(x => !x.paid).reduce((a, x) => a + x.total, 0);
+    $('taxMini').innerHTML = '<div class="kv"><span>الضرائب المستحقة</span><b class="' + (T.totalDue ? 'bad' : 'ok') + '">' + ID.fmt(T.totalDue) + ' جم</b></div><div class="kv"><span>مستحقات الجمارك</span><b class="' + (SH ? 'bad' : 'ok') + '">' + ID.fmt(SH) + ' جم</b></div>';
+  }
+  $('conv').onclick = () => { const max = D.balances().usd;
+    ID.dialog({ title: 'تحويل دولار إلى جنيه', note: 'المتاح: ' + ID.fmt(max) + ' $ • السعر ' + ID.FX + ' جم', fields: [{ id: 'amt', label: 'المبلغ بالدولار', type: 'number', inputmode: 'numeric', test: v => +v > 0 && +v <= max, msg: 'اكتب مبلغاً بين 1 و ' + ID.fmt(max) + '.' }], ok: 'تحويل' }).then(v => {
+      if (!v) return; st.usdOut = (st.usdOut || 0) + Math.round(+v.amt); ID.log('تحويل عملة', ID.fmt(v.amt) + ' $ إلى ' + ID.fmt(+v.amt * ID.FX) + ' جم'); render(); ID.toast('تم التحويل بنجاح'); }); };
+  $('payCard').onclick = () => ID.confirm('سداد البطاقة الائتمانية', 'سيتم خصم ' + ID.fmt(b.cardDue) + ' جم من حسابك الجاري.', 'سداد').then(ok => { if (!ok) return; const r = ID.pay(b.cardDue, 'سداد مستحق البطاقة الائتمانية'); if (!r.ok) return ID.toast(r.err, true); st.cardPaid = Date.now(); ID.save(); render(); ID.toast('تم السداد'); });
+  $('stmtBtn').onclick = () => {
+    $('sBank').textContent = b.ahli.bank; $('sName').textContent = u.name; $('sAcc').textContent = b.ahli.mask; $('sBal').textContent = ID.fmt(D.balances().ahli);
+    const rows = st.activity.slice(0, 8); $('sRows').innerHTML = rows.length ? rows.map(a => '<tr><td>' + e(a.title) + '</td><td>' + e(a.text) + '</td><td>' + ID.fmtDate(new Date(a.t)) + '</td></tr>').join('') : '<tr><td colspan="3">لا توجد حركات حديثة.</td></tr>';
+    ID.qr($('sQr'), 'DIGITALSEGYPT-DEMO|STMT|' + ID.refCode(u.nid + Date.now())); $('stmt').hidden = false; $('stmt').scrollIntoView({ behavior: 'smooth' });
+  };
+  $('sClose').onclick = () => { $('stmt').hidden = true; };
+  render();
+
+  /* ---------- التحويلات ---------- */
+  function renderTf() {
+    $('tfBal').textContent = ID.fmt(D.balances().ahli) + ' جم';
+    const L = st.receipts.filter(r => /^تحويل/.test(r.title)).slice(0, 8);
+    $('tfList').innerHTML = L.length ? L.map(r => '<div class="appt-card"><div><b>' + e(r.title) + '</b><br><small>' + Gov.dt(r.t) + '</small></div><div><b>' + ID.fmt(r.amount) + ' جم</b> <button class="button ghost sm" data-rc="' + r.id + '">إيصال</button></div></div>').join('') : '<p class="muted">لا توجد تحويلات بعد.</p>';
+  }
+  $('tfList').onclick = ev => { const x = ev.target.closest('[data-rc]'); if (x) Gov.receipt(x.dataset.rc); };
+  $('tfBtn').onclick = () => {
+    if (u.age < 18) return ID.toast('التحويلات متاحة لمن بلغ 18 سنة.', true);
+    ID.dialog({ title: 'تحويل أموال', note: 'من حسابك الجاري ' + b.ahli.mask, fields: [
+      { id: 'to', label: 'اسم المستفيد (ثلاثي)', test: ID.validName, msg: 'اكتب اسم المستفيد ثلاثياً.' },
+      { id: 'acc', label: 'رقم الحساب / الموبايل / عنوان InstaPay', test: v => /^(\d{10,16}|EG\d{27}|[A-Za-z0-9._-]+@instapay)$/i.test(v), msg: 'اكتب رقم حساب (10-16 رقماً) أو موبايل أو IBAN أو عنوان @instapay.' },
+      { id: 'amt', label: 'المبلغ (جم)', type: 'number', inputmode: 'numeric', test: v => +v >= 1 && +v <= 200000, msg: 'اكتب مبلغاً بين 1 و 200,000 جم.' },
+      { id: 'why', label: 'الغرض', options: ['تحويل شخصي', 'سداد التزامات', 'هدية', 'أخرى'] }], ok: 'متابعة' }).then(v => {
+      if (!v) return; const amt = Math.round(+v.amt), fee = Math.min(15, Math.max(2, Math.round(amt * 0.001))), tot = amt + fee;
+      ID.confirm('تأكيد التحويل', 'سيتم تحويل ' + ID.fmt(amt) + ' جم إلى ' + v.to + ' + رسوم ' + fee + ' جم (الإجمالي ' + ID.fmt(tot) + ' جم).', 'نفّذ التحويل').then(ok => {
+        if (!ok) return; const r = ID.pay(tot, 'تحويل إلى ' + v.to, { service: 'تحويل بنكي (InstaPay)', org: 'البنك الأهلي المصري', details: [['المستفيد', v.to], ['الحساب', v.acc], ['المبلغ المحوّل', ID.fmt(amt) + ' جم'], ['رسوم التحويل', fee + ' جم'], ['الغرض', v.why]] });
+        if (!r.ok) return ID.toast(r.err, true); render(); renderTf(); renderTax(); }); });
+  };
+  /* ---------- الربط الضريبي ---------- */
+  function renderTax() {
+    const T = Gov.taxProfile(); $('txNo').textContent = T.no; $('txInt').textContent = ID.fmt(T.interest) + ' جم'; $('txWh').textContent = ID.fmt(T.interestTax) + ' جم'; $('txDue').textContent = ID.fmt(T.totalDue) + ' جم';
+    $('txAuto').innerHTML = st.taxAuto ? '<span class="pill ok">مفعّل</span>' : '<span class="pill">غير مفعّل</span>'; $('txToggle').textContent = st.taxAuto ? 'إيقاف السداد التلقائي للضرائب' : 'تفعيل السداد التلقائي للضرائب';
+    $('txRows').innerHTML = T.accts.length ? T.accts.map(a => '<tr><td>' + e(a.bank) + ' ' + a.mask + '</td><td class="num">' + ID.fmt(a.interest) + ' جم</td><td class="num">' + ID.fmt(Math.round(a.interest * 0.2)) + ' جم</td></tr>').join('') : '<tr><td colspan="3" class="muted">لا توجد حسابات ذات فوائد.</td></tr>';
+  }
+  $('txToggle').onclick = () => { if (u.age < 18) return ID.toast('متاح لمن بلغ 18 سنة.', true); st.taxAuto = !st.taxAuto; ID.log('الربط الضريبي', st.taxAuto ? 'تفعيل السداد التلقائي للضرائب' : 'إيقاف السداد التلقائي'); ID.save(); renderTax(); ID.toast(st.taxAuto ? 'تم تفعيل السداد التلقائي' : 'تم إيقاف السداد التلقائي'); };
+  Gov.grid($('svcGrid'), GL, { refresh: () => { render(); renderTf(); } });
+  Gov.tabs(document, { ov: {}, transfer: { on: renderTf }, svc: { on: () => Gov.requestsList($('reqs'), r => /البنك/.test(r.org)) }, tax: { on: renderTax } }, 'ov');
+  renderTf(); renderTax();
+});
+</script>
+</body>
+</html>

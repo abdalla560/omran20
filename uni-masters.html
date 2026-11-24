@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | بيان درجة الماجستير الرقمي</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.cert{max-width:880px;margin:0 auto;text-align:center;font-size:1.45rem;line-height:2.1}
+.cert .ttl{font-size:clamp(2rem,6vw,3.2rem);color:#7a1020;margin:8px 0;font-weight:800}
+.cert .thesis{background:#f2ecda;border:1px dashed #b08d3c;padding:14px 20px;margin:18px auto;max-width:90%;font-style:italic;font-size:1.25rem}
+.cert .foot{justify-content:space-around;margin-top:36px}
+.cert .emb{width:96px;height:96px;border:4px solid #b08d3c;color:#b08d3c;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.8rem;font-weight:800;transform:rotate(-12deg);background:#fff;line-height:1.3}
+.cert .sig{font-size:1.1rem}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › التعليم العالي › دراسات الماجستير</div>
+  <div class="page-head"><div><h1>🎓 دراسات الماجستير</h1><p>وزارة التعليم العالي والبحث العلمي</p></div>
+    <div class="btn-row no-print" style="margin:0"><button class="button ghost" id="edit" type="button"> تحديث السجل الأكاديمي</button><button class="button" type="button" onclick="window.print()">🖨️ طباعة</button></div></div>
+  <div class="hero-sum" id="sum"></div>
+  <div class="tabs" role="tablist" aria-label="أقسام الدراسة">
+    <button role="tab" id="t-cert" aria-selected="true" aria-controls="p-cert"> شهادتي</button>
+    <button role="tab" id="t-svc" aria-selected="false" aria-controls="p-svc"> الخدمات والطلبات</button>
+    <button role="tab" id="t-reqs" aria-selected="false" aria-controls="p-reqs"> طلباتي</button>
+  </div>
+  <section id="p-cert" role="tabpanel"><div id="view"></div></section>
+  <section id="p-svc" role="tabpanel" hidden><div id="svcGrid"></div></section>
+  <section id="p-reqs" role="tabpanel" hidden><div class="box"><h3> متابعة طلباتي</h3><div id="reqs"></div></div></section>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const v = document.getElementById('view'), x = D.uniInfo(), e = ID.esc, LEVEL = 2;
+  document.getElementById('edit').onclick = () => ID.academicDialog().then(ok => ok && location.reload());
+  function cert() {
+  if (!x.has || x.level < LEVEL) {
+    v.innerHTML = '<div class="box empty"><span class="em"></span><h3>لا يوجد سجل دراسات عليا (ماجستير)</h3><p>أضف بياناتك الأكاديمية من زر «تحديث السجل الأكاديمي» ليظهر هذا المستند.</p></div>'; return;
+  }
+  const logoImg = '<img class="logo" src="assets/img/logo-digitals.svg" alt="">', qrId = 'q';
+
+  v.innerHTML = '<article class="paper cert"><div class="head"><h3>جمهورية مصر العربية</h3><h3>وزارة التعليم العالي والبحث العلمي</h3>' + logoImg + '<h1 class="ttl">شهادة درجة الماجستير</h1></div>' +
+    'بناءً على تقرير لجنة الحكم والمناقشة المنعقدة بجامعة <span class="val">' + e(x.uni) + '</span><br>' +
+    'قرر السيد الأستاذ الدكتور رئيس الجامعة منح الباحث/ <br><span class="val">' + e(u.name) + '</span><br>' +
+    'المقيد برقم قومي: <span class="val">' + u.nid + '</span><br>' +
+    'درجة الماجستير في <span class="val">' + e(x.faculty) + ' - ' + e(x.major) + '</span><br>' +
+    'بتقدير <span class="val">' + x.mGrade + '</span> عن رسالته العلمية (' + x.mYear + ') وموضوعها:' +
+    '<div class="thesis">«' + e(x.mThesis) + '»</div>' +
+    '<div class="foot"><div class="qr" id="q"></div><div class="emb">Digitals EGYPT<br>وثيقة مؤمنة</div><div class="sig">رئيس الجامعة<br>__________</div></div></article>';
+  ID.qr(document.getElementById(qrId), 'DIGITALSEGYPT-DEMO|UNI-' + LEVEL + '|' + ID.refCode(u.nid + 'uni' + LEVEL));
+  }
+  cert();
+  const hs = (c, l, val) => '<div class="st" style="--c:' + c + '"><small>' + l + '</small><b style="font-size:1.1rem">' + val + '</b></div>';
+  document.getElementById('sum').innerHTML = x.has && x.level >= LEVEL ? hs('var(--brand)', 'الجامعة', e(x.uni)) + hs('var(--info)', 'الكلية', e(x.faculty)) + hs('var(--ok)', 'القسم', e(x.major)) + hs('var(--violet,#a78bfa)', 'التقدير', e(LEVEL === 1 ? x.grade : LEVEL === 2 ? x.mGrade : x.pGrade)) : '';
+  Gov.grid(document.getElementById('svcGrid'), Gov.CAT.masters, {});
+  Gov.tabs(document, { cert: {}, svc: {}, reqs: { on: () => Gov.requestsList(document.getElementById('reqs'), r => /التعليم العالي/.test(r.org)) } }, 'cert');
+});
+</script>
+</body>
+</html>

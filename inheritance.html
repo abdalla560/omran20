@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitals EGYPT | حصر الورثة والاستحقاقات</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.sum{color:#eef3ff;background:linear-gradient(135deg,#2c3e50,#000);border:2px solid #8e44ad;border-radius:16px;padding:26px;text-align:center;margin-bottom:22px}
+.asset{border-bottom:3px solid #8e44ad}
+</style>
+<style>
+.heir{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:0 20px}
+.share{display:inline-block;background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok);font-weight:800;border-radius:99px;padding:2px 14px}
+</style>
+</head>
+<body>
+<main class="page" id="main">
+  <div class="crumbs"><a href="index.html">الرئيسية</a> › وزارة العدل › حصر الورثة</div>
+  <div class="page-head"><div><h1>👥 منظومة حصر التركات والاستحقاقات</h1><p>محاكاة افتراضية لأغراض العرض فقط — لا تُعد إعلام وراثة رسمياً.</p></div></div>
+  <div class="tabs" role="tablist" aria-label="أقسام الورثة">
+    <button role="tab" id="t-ov" aria-selected="true" aria-controls="p-ov"> ملخص التركة</button>
+    <button role="tab" id="t-heirs" aria-selected="false" aria-controls="p-heirs"> تسجيل الورثة والتحقق</button>
+    <button role="tab" id="t-reqs" aria-selected="false" aria-controls="p-reqs"> طلباتي</button>
+  </div>
+  <section id="p-ov" role="tabpanel">
+  <section class="sum" aria-label="ملخص التركة">
+    <h2 class="hl">الملف الحصري للمواطن: <span id="un"></span></h2>
+    <p>الرقم القومي: <span class="mono" id="ui"></span></p>
+    <div style="font-size:1.5rem;margin-top:8px">إجمالي التركة التقديرية: <b class="ok" id="tot"></b> <small>جم</small></div>
+  </section>
+
+  <div class="grid" style="--min:250px">
+    <div class="box asset"><h4> الأرصدة البنكية</h4><p class="muted">مجمعة من الحسابات المرتبطة</p><p>القيمة: <b id="bv"></b> جم</p><a href="banks.html" class="button ghost sm">التفاصيل</a></div>
+    <div class="box asset"><h4> الأصول العقارية</h4><p>عدد الوحدات المسجلة: <b id="pc"></b></p><p>القيمة التقديرية: <b id="pv"></b> جم</p><a href="justice.html" class="button ghost sm">التفاصيل</a></div>
+    <div class="box asset"><h4> عدد الورثة المحتملين</h4><p>بناءً على ملف الأسرة: <b id="hc"></b> أفراد</p><p>حالة المسح: <span class="pill ok">مكتمل</span></p></div>
+  </div>
+
+  <div class="btn-row no-print" style="justify-content:center;margin-top:26px"><button class="button" id="gen" type="button" style="background:#8e44ad;color:#fff;padding:14px 38px">إصدار إعلام وراثة رقمي مؤقت</button></div>
+
+  </section>
+
+  <section id="p-heirs" role="tabpanel" hidden>
+    <div class="box accent" style="--c:var(--info)"><h3> إضافة وريث بالرقم القومي</h3>
+      <p class="muted">أدخل الرقم القومي للوريث المراد الاستعلام عنه واسمه وصلة القرابة. يتحقق النظام من صحة الرقم، ومن اتساق النوع والسن وتسلسل الاسم مع صلة القرابة، ثم تُعرض بياناته وتُحسب أنصبته الشرعية.</p>
+      <div class="form-grid">
+        <div><label for="hn">الرقم القومي للوريث (14 رقماً)</label><input id="hn" inputmode="numeric" maxlength="14" autocomplete="off"></div>
+        <div><label for="hm">اسم الوريث (ثلاثي)</label><input id="hm"></div>
+        <div><label for="hr">صلة القرابة بالمتوفى (<span id="dn2"></span>)</label><select id="hr"></select></div>
+      </div><div class="ferr" id="herr" role="alert"></div>
+      <div class="btn-row"><button class="button" id="addHeir" type="button">تحقق وإضافة</button></div></div>
+    <div class="box" style="margin-top:18px"><h3>الورثة المسجلون <span id="hcount" class="pill"></span></h3><div id="hlist"></div></div>
+    <div class="box" style="margin-top:18px"><h3> توزيع الأنصبة الشرعية على التركة (<span id="estate"></span> جم)</h3><div id="shares"></div></div>
+    <div class="btn-row no-print" style="justify-content:center;margin-top:18px"><button class="button" id="gen" type="button" style="background:#8e44ad;color:#fff;padding:14px 38px">إصدار إعلام وراثة (رسوم 200 جم)</button></div>
+  </section>
+
+  <section id="p-reqs" role="tabpanel" hidden><div class="box"><h3> متابعة طلباتي</h3><div id="reqs"></div></div></section>
+  <article class="paper" id="doc" style="margin-top:22px" hidden>
+    <div class="head"><img class="logo" src="assets/img/logo-digitals.svg" alt=""><h2>وزارة العدل - محكمة الأسرة</h2><h3>إعلام وراثة رقمي (محاكاة)</h3></div>
+    <p>بعد الاطلاع على السجلات الرقمية للمتوفى (افتراضياً) السيد/ <span class="val" id="dn"></span></p>
+    <p>المقيد برقم قومي: <span class="val" id="di"></span></p>
+    <p><b>تُحصر ورثته الشرعيون في كل من:</b></p><ul id="hl"></ul>
+    <div style="border-top:1px solid #ccc;padding-top:8px;margin-top:12px"><p><b>نصيب الورثة:</b> طبقاً للشريعة الإسلامية والقوانين المنظمة.</p><p><b>تاريخ الحصر:</b> <span id="dd"></span></p></div>
+    <div class="foot"><div class="qr" id="dq"></div><div class="seal" style="border-color:#8e44ad;color:#8e44ad">نيابة الأسرة<br>حصر رقمي</div></div>
+    <div class="btn-row no-print"><button class="button" type="button" onclick="window.print()">🖨️ طباعة الوثيقة</button><button class="button ghost" type="button" id="dx">إغلاق</button></div>
+  </article>
+</main>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/gov.js"></script>
+<script>
+ID.ready(function (u, D) {
+  const $ = id => document.getElementById(id), A = D.assets(), F = D.family(), st = ID.state(), e = ID.esc, estate = A.bank + A.prop;
+  $('un').textContent = u.name; $('ui').textContent = u.nid; $('dn2').textContent = u.name;
+  $('bv').textContent = ID.fmt(A.bank); $('pc').textContent = A.propCount; $('pv').textContent = ID.fmt(A.prop); $('tot').textContent = ID.fmt(estate); $('hc').textContent = F.heirs.length;
+  $('estate').textContent = ID.fmt(estate);
+  const REL = u.male ? ['زوجة', 'ابن', 'ابنة', 'أب', 'أم', 'أخ شقيق', 'أخت شقيقة'] : ['زوج', 'ابن', 'ابنة', 'أب', 'أم', 'أخ شقيق', 'أخت شقيقة'];
+  $('hr').innerHTML = REL.map(r => '<option>' + r + '</option>').join('');
+  const MALE = { 'زوج': 1, 'ابن': 1, 'أب': 1, 'أخ شقيق': 1 }, FEM = { 'زوجة': 1, 'ابنة': 1, 'أم': 1, 'أخت شقيقة': 1 };
+  const tok = s => String(s).trim().split(/\s+/);
+
+  /* التحقق من صلة القرابة */
+  function verify(nid, name, rel) {
+    const n = ID.parseNid(nid); if (!n.ok) return { err: n.err || 'رقم قومي غير صحيح.' };
+    if (n.nid === u.nid) return { err: 'لا يمكن إضافة المتوفى نفسه كوريث.' };
+    if (st.heirs.some(h => h.nid === n.nid)) return { err: 'هذا الوريث مسجل بالفعل.' };
+    if (!ID.validName(name) || tok(name).length < 3) return { err: 'اكتب اسم الوريث ثلاثياً (حروف عربية فقط).' };
+    if (MALE[rel] && !n.male) return { err: 'لم يتم التحقق: صلة القرابة «' + rel + '» تتطلب نوع ذكر، بينما الرقم القومي يخص أنثى.' };
+    if (FEM[rel] && n.male) return { err: 'لم يتم التحقق: صلة القرابة «' + rel + '» تتطلب نوع أنثى، بينما الرقم القومي يخص ذكراً.' };
+    const gap = u.age - n.age, T = tok(name), U = tok(u.name);   // gap>0: الوريث أصغر من المتوفى
+    if (rel === 'ابن' || rel === 'ابنة') {
+      if (gap < 15) return { err: 'لم يتم التحقق: الفارق العمري بين المتوفى والابن/الابنة (' + gap + ' سنة) أقل من 15 سنة.' };
+      if (T[1] !== U[0]) return { err: 'لم يتم التحقق: اسم الأب في اسم الوريث («' + T[1] + '») لا يطابق اسم المتوفى («' + U[0] + '»).' };
+    } else if (rel === 'أب' || rel === 'أم') {
+      if (-gap < 15) return { err: 'لم يتم التحقق: الوالد/الوالدة يجب أن يكبر المتوفى بـ 15 سنة على الأقل (الفارق الحالي ' + (-gap) + ').' };
+      if (rel === 'أب' && T[0] !== U[1]) return { err: 'لم يتم التحقق: اسم الأب («' + T[0] + '») لا يطابق اسم والد المتوفى («' + U[1] + '»).' };
+    } else if (rel.indexOf('أخ') === 0) {
+      if (Math.abs(gap) > 30) return { err: 'لم يتم التحقق: الفارق العمري بين الأشقاء كبير جداً.' };
+      if (T[1] !== U[1] || T[2] !== U[2]) return { err: 'لم يتم التحقق: اسم الأب والجد في اسم الوريث لا يطابقان اسم المتوفى (شقيق لأب وأم).' };
+    } else {   // زوج / زوجة
+      if (n.age < 16 || u.age < 16) return { err: 'لم يتم التحقق: سن الزواج أقل من الحد القانوني.' };
+      if (st.heirs.some(h => h.rel === 'زوج' || h.rel === 'زوجة') && u.male === false) return { err: 'يوجد زوج مسجل بالفعل.' };
+      if (u.male && st.heirs.filter(h => h.rel === 'زوجة').length >= 4) return { err: 'لا يزيد عدد الزوجات على أربع.' };
+    }
+    if ((rel === 'أب' && st.heirs.some(h => h.rel === 'أب')) || (rel === 'أم' && st.heirs.some(h => h.rel === 'أم'))) return { err: 'تم تسجيل ' + rel + ' بالفعل.' };
+    return { ok: true, n };
+  }
+  $('addHeir').onclick = () => {
+    const nid = ID.toEn($('hn').value).trim(), name = $('hm').value.trim().replace(/\s+/g, ' '), rel = $('hr').value, r = verify(nid, name, rel);
+    if (r.err) { $('herr').textContent = r.err; return; } $('herr').textContent = '';
+    st.heirs.push({ nid: r.n.nid, name, rel, dob: r.n.dob, age: r.n.age, gov: r.n.gov, male: r.n.male, t: Date.now() }); ID.log('تسجيل وريث', name + ' (' + rel + ')'); ID.save();
+    $('hn').value = ''; $('hm').value = ''; renderHeirs(); ID.toast('تم التحقق من صلة القرابة وتسجيل الوريث');
+  };
+
+  /* الأنصبة (كسور) */
+  const gcd = (a, b) => b ? gcd(b, a % b) : Math.abs(a);
+  const fr = (n, d) => { const g = gcd(n, d) || 1; return { n: n / g, d: d / g }; };
+  const add = (a, b) => fr(a.n * b.d + b.n * a.d, a.d * b.d), mul = (a, b) => fr(a.n * b.n, a.d * b.d), sub = (a, b) => fr(a.n * b.d - b.n * a.d, a.d * b.d);
+  const val = f => f.n / f.d, show = f => f.n === 0 ? '0' : f.d === 1 ? String(f.n) : f.n + '/' + f.d;
+  function compute(H) {
+    const sons = H.filter(h => h.rel === 'ابن'), dau = H.filter(h => h.rel === 'ابنة'), father = H.find(h => h.rel === 'أب'), mother = H.find(h => h.rel === 'أم'), sp = H.filter(h => h.rel === 'زوج' || h.rel === 'زوجة'), bro = H.filter(h => h.rel === 'أخ شقيق'), sis = H.filter(h => h.rel === 'أخت شقيقة');
+    const kids = sons.length + dau.length > 0, S = new Map(); const set = (h, f) => S.set(h.nid, f);
+    sp.forEach(h => set(h, h.rel === 'زوجة' ? mul(kids ? fr(1, 8) : fr(1, 4), fr(1, sp.length)) : (kids ? fr(1, 4) : fr(1, 2))));
+    if (mother) set(mother, (kids || bro.length + sis.length >= 2) ? fr(1, 6) : fr(1, 3));
+    const sib = !kids && !father;   // الإخوة يرثون عند عدم وجود فرع وارث وأب
+    let fixed = fr(0, 1); S.forEach(f => { fixed = add(fixed, f); });
+    if (father) { if (kids) { set(father, fr(1, 6)); fixed = add(fixed, fr(1, 6)); } }
+    if (dau.length && !sons.length) { const sh = dau.length === 1 ? fr(1, 2) : fr(2, 3); dau.forEach(h => set(h, mul(sh, fr(1, dau.length)))); fixed = add(fixed, sh); }
+    if (sib && sis.length && !bro.length) { const sh = sis.length === 1 ? fr(1, 2) : fr(2, 3); sis.forEach(h => set(h, mul(sh, fr(1, sis.length)))); fixed = add(fixed, sh); }
+    let rest = sub(fr(1, 1), fixed), note = '';
+    if (val(rest) < 0) { const k = fr(fixed.d, fixed.n); S.forEach((f, id) => S.set(id, mul(f, k))); rest = fr(0, 1); note = 'عالت المسألة (مجموع الفروض يزيد على التركة) فخُفّضت الأنصبة بنسبة متساوية.'; }
+    else if (val(rest) > 0) {
+      let heirsRes = [];   // عصبة
+      if (sons.length) { const units = sons.length * 2 + dau.length; sons.forEach(h => set(h, mul(rest, fr(2, units)))); dau.forEach(h => set(h, mul(rest, fr(1, units)))); }
+      else if (father) { set(father, add(S.get(father.nid) || fr(0, 1), rest)); }
+      else if (sib && bro.length) { const units = bro.length * 2 + sis.length; bro.forEach(h => set(h, mul(rest, fr(2, units)))); sis.forEach(h => set(h, mul(rest, fr(1, units)))); }
+      else {   // رد على أصحاب الفروض غير الزوجين، وإلا الباقي لبيت المال
+        const rec = H.filter(h => h.rel !== 'زوج' && h.rel !== 'زوجة' && S.has(h.nid));
+        if (rec.length) { let tot = fr(0, 1); rec.forEach(h => { tot = add(tot, S.get(h.nid)); }); rec.forEach(h => set(h, add(S.get(h.nid), mul(rest, mul(S.get(h.nid), fr(tot.d, tot.n)))))); note = 'تم رد الباقي على أصحاب الفروض (غير الزوجين).'; }
+        else note = 'لا يوجد عصبة؛ يؤول الباقي إلى بيت المال وفق القانون.';
+      }
+    }
+    if (!kids && !father && !sib && (bro.length || sis.length)) note = note || '';
+    if ((bro.length || sis.length) && (kids || father)) note = (note ? note + ' ' : '') + 'الإخوة محجوبون بوجود الفرع الوارث أو الأب.';
+    return { S, note };
+  }
+  function renderHeirs() {
+    const H = st.heirs; $('hcount').textContent = H.length + ' وريث';
+    $('hlist').innerHTML = H.length ? H.map((h, i) => '<div class="box" style="margin-bottom:12px"><h4>' + e(h.name) + ' <span class="pill ok">✔ تم التحقق من صلة القرابة</span></h4><div class="heir"><div class="kv"><span>صلة القرابة</span><b>' + e(h.rel) + '</b></div><div class="kv"><span>الرقم القومي</span><b class="mono">' + h.nid + '</b></div><div class="kv"><span>تاريخ الميلاد</span><b>' + h.dob.split('-').reverse().join('/') + '</b></div><div class="kv"><span>السن</span><b>' + h.age + ' سنة</b></div><div class="kv"><span>المحافظة</span><b>' + e(h.gov) + '</b></div><div class="kv"><span>النوع</span><b>' + (h.male ? 'ذكر' : 'أنثى') + '</b></div></div><button class="button ghost sm" data-rm="' + i + '">إزالة</button></div>').join('') : '<p class="muted">لم تُسجَّل أي وريث بعد. أضف الورثة بالرقم القومي لعرض بياناتهم وحساب أنصبتهم.</p>';
+    const r = compute(H);
+    $('shares').innerHTML = H.length ? '<div class="table-wrap"><table><thead><tr><th>الوريث</th><th>الصلة</th><th>النصيب</th><th>القيمة (جم)</th></tr></thead><tbody>' + H.map(h => { const f = r.S.get(h.nid) || fr(0, 1); return '<tr><td>' + e(h.name) + '</td><td>' + e(h.rel) + '</td><td class="num">' + (val(f) ? show(f) : 'محجوب') + '</td><td class="num"><span class="share">' + ID.fmt(Math.round(estate * val(f))) + '</span></td></tr>'; }).join('') + '</tbody></table></div>' + (r.note ? '<p class="muted">' + e(r.note) + '</p>' : '') + '<p class="muted" style="font-size:.85rem">حساب تقريبي مبسط وفق قواعد الفرائض لأغراض العرض التجريبي فقط.</p>' : '<p class="muted">تظهر الأنصبة بعد تسجيل الورثة.</p>';
+    $('hc').textContent = Math.max(F.heirs.length, H.length);
+  }
+  $('hlist').onclick = ev => { const b = ev.target.closest('[data-rm]'); if (!b) return; ID.confirm('إزالة الوريث', 'هل تريد إزالة هذا الوريث من القائمة؟', 'إزالة', true).then(ok => { if (!ok) return; st.heirs.splice(+b.dataset.rm, 1); ID.save(); renderHeirs(); }); };
+
+  /* إعلام الوراثة (برسوم) */
+  $('gen').onclick = () => {
+    const H = st.heirs; if (!H.length) { ID.toast('سجّل ورثة متحققاً منهم أولاً لإصدار الإعلام.', true); return; }
+    const r = compute(H);
+    Gov.run({ id: 'ew', t: 'إعلام وراثة', d: 'إصدار إعلام وراثة بالورثة المتحقق منهم.', fee: 200, org: 'محكمة الأسرة - وزارة العدل', extra: () => H.map(h => [h.rel + ': ' + h.name, show(r.S.get(h.nid) || fr(0, 1))]), pickup: { what: 'إعلام الوراثة الرسمي', place: 'محكمة الأسرة - ' + u.gov, days: 7, docs: 'أصل شهادة وفاة المتوفى + بطاقات الورثة + هذا الإيصال' }, after: () => {
+      $('dn').textContent = u.name; $('di').textContent = u.nid; $('dd').textContent = ID.fmtDate(new Date());
+      $('hl').innerHTML = H.map(h => '<li>' + e(h.rel) + ': ' + e(h.name) + ' (رقم قومي ' + h.nid + ') — النصيب ' + show(r.S.get(h.nid) || fr(0, 1)) + '</li>').join('');
+      ID.qr($('dq'), 'DIGITALSEGYPT-DEMO|HEIRS|' + ID.refCode(u.nid + 'heirs')); $('doc').hidden = false; } }, {});
+  };
+  $('dx').onclick = () => { $('doc').hidden = true; };
+  Gov.tabs(document, { ov: {}, heirs: { on: renderHeirs }, reqs: { on: () => Gov.requestsList($('reqs'), r => /محكمة الأسرة/.test(r.org)) } }, 'ov');
+  renderHeirs();
+});
+</script>
+</body>
+</html>
